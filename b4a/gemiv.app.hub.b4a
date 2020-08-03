@@ -1,0 +1,171 @@
+﻿Build1=gemiv,b4a.gemiv.app.hub
+File1=gemivMain.bal
+FileGroup1=Default Group
+Group=Default Group
+Library1=core
+Library2=phone
+Library3=network
+Library4=tts
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.DarkTheme)~\n~'End of default text.~\n~
+Module1=GemivSpeechReconigtion
+Module2=GemivUdpComunication
+Module3=Starter
+NumberOfFiles=1
+NumberOfLibraries=4
+NumberOfModules=3
+Version=10
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: Gemiv
+	#VersionCode: 1
+	#VersionName: Version 1
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: portrait
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: False
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+	Dim voiceRec 		As GemivSpeechReconigtion
+	Dim udpCom			As GemivUdpComunication
+	Dim comando=""
+	Dim comandos()  	As String
+	comandos = Array As String("prender","apagar")
+	Dim habitacion=""
+	Dim habitaciones()  As String
+	habitaciones = Array As String("baño","dormitorio","cocina")
+	Dim periferico=""
+	Dim perifericos()  	As String
+	perifericos = Array As String("luz","aire","ventilador")
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	'These variables can only be accessed from this module.
+	Private recText 	As EditText
+	Private listen 		As Button
+	Private ip 			As EditText
+	Private response 	As EditText
+	Private mac		 	As EditText
+	Private getcommand 	As Button
+	Private beginlisten As Button
+	Private off 		As Button
+	Private on 			As Button
+	Private ipSwitch 	As String
+	Dim TTS1 As TTS
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	'Do not forget to load the layout file created with the visual designer. For example:
+	'Activity.LoadLayout("Layout1")
+	Activity.LoadLayout("gemivMain")
+	If FirstTime Then
+		voiceRec.Initialize(Null,"Hable por favor")
+		udpCom.Initialize(8889,8888,8120)
+		TTS1.Initialize("TTS1")
+	End If
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+
+Sub listen_Click
+	voiceRec.listenSpeech
+End Sub
+
+Sub setRecTextField
+	Dim result As List = voiceRec.getRecognizedText
+	recText.Text = result.Get(0)
+	Dim texto As String = result.Get(0)
+	Dim palabras() As String
+	Dim pregunta As String
+
+	palabras = Regex.Split(" ",texto)
+	For i=0 To palabras.Length-1
+		Dim list1 As List
+		list1.Initialize2(comandos)
+		Log(list1)
+		Log(palabras(i))
+		If list1.IndexOf(palabras(i).ToLowerCase) <> -1 Then
+			comando=palabras(i)
+		End If
+		list1.Initialize2(habitaciones)
+		If list1.IndexOf(palabras(i).ToLowerCase) <> -1  Then
+			habitacion=palabras(i)
+		End If
+		list1.Initialize2(perifericos)
+		If list1.IndexOf(palabras(i).ToLowerCase) <> -1  Then
+			periferico=palabras(i)
+		End If
+		Next
+	pregunta="¿"
+	If comando="" Then
+		pregunta=pregunta&"que quiere hacer"
+	End If
+	If habitacion="" Then
+	pregunta=pregunta&" en cual habitación"
+	End If
+	If periferico="" Then
+	pregunta=pregunta&" en cual periférico"
+	End If
+	pregunta=pregunta&"?"
+	Log(pregunta)
+	If pregunta.Length>2 Then 
+		TTS1.Speak(pregunta, True)
+		Sleep(pregunta.Length*90)
+		pregunta=""
+		voiceRec.listenSpeech
+	Else
+		Log(comando)
+		Log(habitacion)
+		Log(periferico)
+		udpCom.sendBroadcastUdp(comando.ToLowerCase&"|"&habitacion.ToLowerCase&"|"&periferico.ToLowerCase)
+		TTS1.Speak("Comando Ejecutado: "&comando.ToLowerCase&" "&periferico.ToLowerCase&" de "&habitacion.ToLowerCase, True)
+		comando=""
+		habitacion=""
+		periferico=""
+		End If
+End Sub
+
+Sub readUDPPacket
+	Dim dg As String = udpCom.getMessageDatagram.data
+	ipSwitch         = udpCom.getMessageDatagram.ip
+	Dim dataArray() As String
+	dataArray = Regex.Split("\: ",dg)
+	If dataArray(0)="MAC" Then 
+		mac.Text	 = dataArray(1)
+	End If
+	If dataArray(0)="IP" Then
+		ip.Text		 = dataArray(1)
+	End If
+	
+End Sub
+
+
+Sub getcommand_Click
+	udpCom.sendBroadcastUdp("GETCOMMAND")
+End Sub
+
+Sub beginlisten_Click
+	udpCom.sendDirectUdp("BEGINLISTEN",ipSwitch,0)
+End Sub
+
+Sub off_Click
+	udpCom.sendDirectUdp("apagar",ipSwitch,0)
+End Sub
+
+Sub on_Click
+	udpCom.sendDirectUdp("prender",ipSwitch,0)
+End Sub
