@@ -10,7 +10,7 @@ public class gemivspeechreconigtion extends B4AClass.ImplB4AClass implements BA.
     private static java.util.HashMap<String, java.lang.reflect.Method> htSubs;
     private void innerInitialize(BA _ba) throws Exception {
         if (ba == null) {
-            ba = new BA(_ba, this, htSubs, "b4a.gemiv.app.hub.gemivspeechreconigtion");
+            ba = new anywheresoftware.b4a.ShellBA(_ba, this, htSubs, "b4a.gemiv.app.hub.gemivspeechreconigtion");
             if (htSubs == null) {
                 ba.loadHtSubs(this.getClass());
                 htSubs = ba.htSubs;
@@ -23,118 +23,198 @@ public class gemivspeechreconigtion extends B4AClass.ImplB4AClass implements BA.
             ba.raiseEvent2(null, true, "class_globals", false);
     }
 
- public anywheresoftware.b4a.keywords.Common __c = null;
+ 
+    public void  innerInitializeHelper(anywheresoftware.b4a.BA _ba) throws Exception{
+        innerInitialize(_ba);
+    }
+    public Object callSub(String sub, Object sender, Object[] args) throws Exception {
+        return BA.SubDelegator.SubNotFound;
+    }
+public anywheresoftware.b4a.keywords.Common __c = null;
 public anywheresoftware.b4a.objects.collections.List _recognizedtext = null;
 public String _recognizedlanguage = "";
 public String _recprompttext = "";
 public anywheresoftware.b4a.phone.Phone.VoiceRecognition _vr = null;
 public b4a.gemiv.app.hub.main _main = null;
 public b4a.gemiv.app.hub.starter _starter = null;
-public String  _class_globals() throws Exception{
- //BA.debugLineNum = 1;BA.debugLine="Sub Class_Globals";
- //BA.debugLineNum = 2;BA.debugLine="Private recognizedText As List";
-_recognizedtext = new anywheresoftware.b4a.objects.collections.List();
- //BA.debugLineNum = 3;BA.debugLine="Private recognizedLanguage As String";
-_recognizedlanguage = "";
- //BA.debugLineNum = 4;BA.debugLine="Private recPromptText As String";
-_recprompttext = "";
- //BA.debugLineNum = 5;BA.debugLine="Private VR As VoiceRecognition";
-_vr = new anywheresoftware.b4a.phone.Phone.VoiceRecognition();
- //BA.debugLineNum = 6;BA.debugLine="End Sub";
+public b4a.gemiv.app.hub.dbutils _dbutils = null;
+public String  _initialize(b4a.gemiv.app.hub.gemivspeechreconigtion __ref,anywheresoftware.b4a.BA _ba,String _reclang,String _recprompt) throws Exception{
+__ref = this;
+innerInitialize(_ba);
+RDebugUtils.currentModule="gemivspeechreconigtion";
+if (Debug.shouldDelegate(ba, "initialize", false))
+	 {return ((String) Debug.delegate(ba, "initialize", new Object[] {_ba,_reclang,_recprompt}));}
+RDebugUtils.currentLine=851968;
+ //BA.debugLineNum = 851968;BA.debugLine="Public Sub Initialize(recLang As String, recPrompt";
+RDebugUtils.currentLine=851969;
+ //BA.debugLineNum = 851969;BA.debugLine="VR.Initialize(\"VR\")";
+__ref._vr /*anywheresoftware.b4a.phone.Phone.VoiceRecognition*/ .Initialize("VR");
+RDebugUtils.currentLine=851970;
+ //BA.debugLineNum = 851970;BA.debugLine="recognizedLanguage = recLang";
+__ref._recognizedlanguage /*String*/  = _reclang;
+RDebugUtils.currentLine=851971;
+ //BA.debugLineNum = 851971;BA.debugLine="If Not(recLang = Null) Then";
+if (__c.Not(_reclang== null)) { 
+RDebugUtils.currentLine=851972;
+ //BA.debugLineNum = 851972;BA.debugLine="VR.Language = \"es\"";
+__ref._vr /*anywheresoftware.b4a.phone.Phone.VoiceRecognition*/ .setLanguage("es");
+ };
+RDebugUtils.currentLine=851974;
+ //BA.debugLineNum = 851974;BA.debugLine="recPromptText = recPrompt";
+__ref._recprompttext /*String*/  = _recprompt;
+RDebugUtils.currentLine=851975;
+ //BA.debugLineNum = 851975;BA.debugLine="VR.Prompt = recPrompt";
+__ref._vr /*anywheresoftware.b4a.phone.Phone.VoiceRecognition*/ .setPrompt(_recprompt);
+RDebugUtils.currentLine=851976;
+ //BA.debugLineNum = 851976;BA.debugLine="End Sub";
 return "";
 }
-public anywheresoftware.b4a.objects.collections.List  _getrecognizedtext() throws Exception{
- //BA.debugLineNum = 23;BA.debugLine="Public Sub getRecognizedText As List";
- //BA.debugLineNum = 24;BA.debugLine="Return recognizedText";
-if (true) return _recognizedtext;
- //BA.debugLineNum = 25;BA.debugLine="End Sub";
+public String  _listenspeech(b4a.gemiv.app.hub.gemivspeechreconigtion __ref) throws Exception{
+__ref = this;
+RDebugUtils.currentModule="gemivspeechreconigtion";
+if (Debug.shouldDelegate(ba, "listenspeech", false))
+	 {return ((String) Debug.delegate(ba, "listenspeech", null));}
+RDebugUtils.currentLine=917504;
+ //BA.debugLineNum = 917504;BA.debugLine="Public Sub listenSpeech";
+RDebugUtils.currentLine=917505;
+ //BA.debugLineNum = 917505;BA.debugLine="VR.Listen";
+__ref._vr /*anywheresoftware.b4a.phone.Phone.VoiceRecognition*/ .Listen(ba);
+RDebugUtils.currentLine=917506;
+ //BA.debugLineNum = 917506;BA.debugLine="End Sub";
+return "";
+}
+public anywheresoftware.b4a.objects.collections.List  _getrecognizedtext(b4a.gemiv.app.hub.gemivspeechreconigtion __ref) throws Exception{
+__ref = this;
+RDebugUtils.currentModule="gemivspeechreconigtion";
+if (Debug.shouldDelegate(ba, "getrecognizedtext", false))
+	 {return ((anywheresoftware.b4a.objects.collections.List) Debug.delegate(ba, "getrecognizedtext", null));}
+RDebugUtils.currentLine=983040;
+ //BA.debugLineNum = 983040;BA.debugLine="Public Sub getRecognizedText As List";
+RDebugUtils.currentLine=983041;
+ //BA.debugLineNum = 983041;BA.debugLine="Return recognizedText";
+if (true) return __ref._recognizedtext /*anywheresoftware.b4a.objects.collections.List*/ ;
+RDebugUtils.currentLine=983042;
+ //BA.debugLineNum = 983042;BA.debugLine="End Sub";
 return null;
 }
-public String  _getreconigzedlanguage() throws Exception{
- //BA.debugLineNum = 27;BA.debugLine="Public Sub getReconigzedLanguage As String";
- //BA.debugLineNum = 28;BA.debugLine="Return recognizedLanguage";
-if (true) return _recognizedlanguage;
- //BA.debugLineNum = 29;BA.debugLine="End Sub";
+public String  _class_globals(b4a.gemiv.app.hub.gemivspeechreconigtion __ref) throws Exception{
+__ref = this;
+RDebugUtils.currentModule="gemivspeechreconigtion";
+RDebugUtils.currentLine=786432;
+ //BA.debugLineNum = 786432;BA.debugLine="Sub Class_Globals";
+RDebugUtils.currentLine=786433;
+ //BA.debugLineNum = 786433;BA.debugLine="Private recognizedText As List";
+_recognizedtext = new anywheresoftware.b4a.objects.collections.List();
+RDebugUtils.currentLine=786434;
+ //BA.debugLineNum = 786434;BA.debugLine="Private recognizedLanguage As String";
+_recognizedlanguage = "";
+RDebugUtils.currentLine=786435;
+ //BA.debugLineNum = 786435;BA.debugLine="Private recPromptText As String";
+_recprompttext = "";
+RDebugUtils.currentLine=786436;
+ //BA.debugLineNum = 786436;BA.debugLine="Private VR As VoiceRecognition";
+_vr = new anywheresoftware.b4a.phone.Phone.VoiceRecognition();
+RDebugUtils.currentLine=786437;
+ //BA.debugLineNum = 786437;BA.debugLine="End Sub";
 return "";
 }
-public String  _getrecprompttext() throws Exception{
- //BA.debugLineNum = 36;BA.debugLine="Public Sub getRecPromptText As String";
- //BA.debugLineNum = 37;BA.debugLine="Return recPromptText";
-if (true) return _recprompttext;
- //BA.debugLineNum = 38;BA.debugLine="End Sub";
+public String  _getreconigzedlanguage(b4a.gemiv.app.hub.gemivspeechreconigtion __ref) throws Exception{
+__ref = this;
+RDebugUtils.currentModule="gemivspeechreconigtion";
+if (Debug.shouldDelegate(ba, "getreconigzedlanguage", false))
+	 {return ((String) Debug.delegate(ba, "getreconigzedlanguage", null));}
+RDebugUtils.currentLine=1048576;
+ //BA.debugLineNum = 1048576;BA.debugLine="Public Sub getReconigzedLanguage As String";
+RDebugUtils.currentLine=1048577;
+ //BA.debugLineNum = 1048577;BA.debugLine="Return recognizedLanguage";
+if (true) return __ref._recognizedlanguage /*String*/ ;
+RDebugUtils.currentLine=1048578;
+ //BA.debugLineNum = 1048578;BA.debugLine="End Sub";
 return "";
 }
-public String  _initialize(anywheresoftware.b4a.BA _ba,String _reclang,String _recprompt) throws Exception{
-innerInitialize(_ba);
- //BA.debugLineNum = 9;BA.debugLine="Public Sub Initialize(recLang As String, recPrompt";
- //BA.debugLineNum = 10;BA.debugLine="VR.Initialize(\"VR\")";
-_vr.Initialize("VR");
- //BA.debugLineNum = 11;BA.debugLine="recognizedLanguage = recLang";
-_recognizedlanguage = _reclang;
- //BA.debugLineNum = 12;BA.debugLine="If Not(recLang = Null) Then";
-if (__c.Not(_reclang== null)) { 
- //BA.debugLineNum = 13;BA.debugLine="VR.Language = \"es\"";
-_vr.setLanguage("es");
- };
- //BA.debugLineNum = 15;BA.debugLine="recPromptText = recPrompt";
-_recprompttext = _recprompt;
- //BA.debugLineNum = 16;BA.debugLine="VR.Prompt = recPrompt";
-_vr.setPrompt(_recprompt);
- //BA.debugLineNum = 17;BA.debugLine="End Sub";
+public String  _getrecprompttext(b4a.gemiv.app.hub.gemivspeechreconigtion __ref) throws Exception{
+__ref = this;
+RDebugUtils.currentModule="gemivspeechreconigtion";
+if (Debug.shouldDelegate(ba, "getrecprompttext", false))
+	 {return ((String) Debug.delegate(ba, "getrecprompttext", null));}
+RDebugUtils.currentLine=1179648;
+ //BA.debugLineNum = 1179648;BA.debugLine="Public Sub getRecPromptText As String";
+RDebugUtils.currentLine=1179649;
+ //BA.debugLineNum = 1179649;BA.debugLine="Return recPromptText";
+if (true) return __ref._recprompttext /*String*/ ;
+RDebugUtils.currentLine=1179650;
+ //BA.debugLineNum = 1179650;BA.debugLine="End Sub";
 return "";
 }
-public String  _listenspeech() throws Exception{
- //BA.debugLineNum = 19;BA.debugLine="Public Sub listenSpeech";
- //BA.debugLineNum = 20;BA.debugLine="VR.Listen";
-_vr.Listen(ba);
- //BA.debugLineNum = 21;BA.debugLine="End Sub";
+public String  _setreconigzedlanguage(b4a.gemiv.app.hub.gemivspeechreconigtion __ref,String _textlang) throws Exception{
+__ref = this;
+RDebugUtils.currentModule="gemivspeechreconigtion";
+if (Debug.shouldDelegate(ba, "setreconigzedlanguage", false))
+	 {return ((String) Debug.delegate(ba, "setreconigzedlanguage", new Object[] {_textlang}));}
+RDebugUtils.currentLine=1114112;
+ //BA.debugLineNum = 1114112;BA.debugLine="Public Sub setReconigzedLanguage(textLang As Strin";
+RDebugUtils.currentLine=1114113;
+ //BA.debugLineNum = 1114113;BA.debugLine="recognizedLanguage = textLang";
+__ref._recognizedlanguage /*String*/  = _textlang;
+RDebugUtils.currentLine=1114114;
+ //BA.debugLineNum = 1114114;BA.debugLine="VR.Language = \"es\"";
+__ref._vr /*anywheresoftware.b4a.phone.Phone.VoiceRecognition*/ .setLanguage("es");
+RDebugUtils.currentLine=1114115;
+ //BA.debugLineNum = 1114115;BA.debugLine="End Sub";
 return "";
 }
-public String  _setreconigzedlanguage(String _textlang) throws Exception{
- //BA.debugLineNum = 31;BA.debugLine="Public Sub setReconigzedLanguage(textLang As Strin";
- //BA.debugLineNum = 32;BA.debugLine="recognizedLanguage = textLang";
-_recognizedlanguage = _textlang;
- //BA.debugLineNum = 33;BA.debugLine="VR.Language = \"es\"";
-_vr.setLanguage("es");
- //BA.debugLineNum = 34;BA.debugLine="End Sub";
+public String  _setrecpromptext(b4a.gemiv.app.hub.gemivspeechreconigtion __ref,String _recprompt) throws Exception{
+__ref = this;
+RDebugUtils.currentModule="gemivspeechreconigtion";
+if (Debug.shouldDelegate(ba, "setrecpromptext", false))
+	 {return ((String) Debug.delegate(ba, "setrecpromptext", new Object[] {_recprompt}));}
+RDebugUtils.currentLine=1245184;
+ //BA.debugLineNum = 1245184;BA.debugLine="Public Sub setRecPrompText(recPrompt As String)";
+RDebugUtils.currentLine=1245185;
+ //BA.debugLineNum = 1245185;BA.debugLine="recPromptText = recPromptText";
+__ref._recprompttext /*String*/  = __ref._recprompttext /*String*/ ;
+RDebugUtils.currentLine=1245186;
+ //BA.debugLineNum = 1245186;BA.debugLine="End Sub";
 return "";
 }
-public String  _setrecpromptext(String _recprompt) throws Exception{
- //BA.debugLineNum = 40;BA.debugLine="Public Sub setRecPrompText(recPrompt As String)";
- //BA.debugLineNum = 41;BA.debugLine="recPromptText = recPromptText";
-_recprompttext = _recprompttext;
- //BA.debugLineNum = 42;BA.debugLine="End Sub";
-return "";
-}
-public String  _vr_result(boolean _success,anywheresoftware.b4a.objects.collections.List _texts) throws Exception{
+public String  _vr_result(b4a.gemiv.app.hub.gemivspeechreconigtion __ref,boolean _success,anywheresoftware.b4a.objects.collections.List _texts) throws Exception{
+__ref = this;
+RDebugUtils.currentModule="gemivspeechreconigtion";
+if (Debug.shouldDelegate(ba, "vr_result", false))
+	 {return ((String) Debug.delegate(ba, "vr_result", new Object[] {_success,_texts}));}
 int _i = 0;
- //BA.debugLineNum = 45;BA.debugLine="Public Sub VR_Result (Success As Boolean, Texts As";
- //BA.debugLineNum = 46;BA.debugLine="If Success Then";
+RDebugUtils.currentLine=1310720;
+ //BA.debugLineNum = 1310720;BA.debugLine="Public Sub VR_Result (Success As Boolean, Texts As";
+RDebugUtils.currentLine=1310721;
+ //BA.debugLineNum = 1310721;BA.debugLine="If Success Then";
 if (_success) { 
- //BA.debugLineNum = 47;BA.debugLine="recognizedText = Texts";
-_recognizedtext = _texts;
- //BA.debugLineNum = 48;BA.debugLine="For i = 0 To Texts.Size -1";
+RDebugUtils.currentLine=1310722;
+ //BA.debugLineNum = 1310722;BA.debugLine="recognizedText = Texts";
+__ref._recognizedtext /*anywheresoftware.b4a.objects.collections.List*/  = _texts;
+RDebugUtils.currentLine=1310723;
+ //BA.debugLineNum = 1310723;BA.debugLine="For i = 0 To Texts.Size -1";
 {
 final int step3 = 1;
 final int limit3 = (int) (_texts.getSize()-1);
 _i = (int) (0) ;
 for (;_i <= limit3 ;_i = _i + step3 ) {
- //BA.debugLineNum = 49;BA.debugLine="Log (Texts.Get(i))";
-__c.LogImpl("81310724",BA.ObjectToString(_texts.Get(_i)),0);
- //BA.debugLineNum = 50;BA.debugLine="Log (\" i: \"&i)";
-__c.LogImpl("81310725"," i: "+BA.NumberToString(_i),0);
+RDebugUtils.currentLine=1310724;
+ //BA.debugLineNum = 1310724;BA.debugLine="Log (Texts.Get(i))";
+__c.LogImpl("31310724",BA.ObjectToString(_texts.Get(_i)),0);
+RDebugUtils.currentLine=1310725;
+ //BA.debugLineNum = 1310725;BA.debugLine="Log (\" i: \"&i)";
+__c.LogImpl("31310725"," i: "+BA.NumberToString(_i),0);
  }
 };
- //BA.debugLineNum = 52;BA.debugLine="recognizedText = Texts";
-_recognizedtext = _texts;
- //BA.debugLineNum = 53;BA.debugLine="CallSub(Main,\"setRecTextField\")";
-__c.CallSubNew(ba,(Object)(_main.getObject()),"setRecTextField");
+RDebugUtils.currentLine=1310727;
+ //BA.debugLineNum = 1310727;BA.debugLine="recognizedText = Texts";
+__ref._recognizedtext /*anywheresoftware.b4a.objects.collections.List*/  = _texts;
+RDebugUtils.currentLine=1310728;
+ //BA.debugLineNum = 1310728;BA.debugLine="CallSub(Main,\"setRecTextField\")";
+__c.CallSubDebug(ba,(Object)(_main.getObject()),"setRecTextField");
  };
- //BA.debugLineNum = 55;BA.debugLine="End Sub";
+RDebugUtils.currentLine=1310730;
+ //BA.debugLineNum = 1310730;BA.debugLine="End Sub";
 return "";
-}
-public Object callSub(String sub, Object sender, Object[] args) throws Exception {
-BA.senderHolder.set(sender);
-return BA.SubDelegator.SubNotFound;
 }
 }

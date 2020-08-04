@@ -6,14 +6,17 @@ Library1=core
 Library2=phone
 Library3=network
 Library4=tts
+Library5=dbutils
+Library6=runtimepermissions
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.DarkTheme)~\n~'End of default text.~\n~
-Module1=GemivSpeechReconigtion
-Module2=GemivUdpComunication
-Module3=Starter
+Module1=GemivDBManager
+Module2=GemivSpeechReconigtion
+Module3=GemivUdpComunication
+Module4=Starter
 NumberOfFiles=1
-NumberOfLibraries=4
-NumberOfModules=3
-Version=10
+NumberOfLibraries=6
+NumberOfModules=4
+Version=9.801
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: Gemiv
@@ -34,15 +37,19 @@ Sub Process_Globals
 	'These variables can be accessed from all modules.
 	Dim voiceRec 		As GemivSpeechReconigtion
 	Dim udpCom			As GemivUdpComunication
-	Dim comando=""
+	Dim runtimeAdmin	As RuntimePermissions
 	Dim comandos()  	As String
-	comandos = Array As String("prender","apagar")
-	Dim habitacion=""
+	Dim comando	 		As String
 	Dim habitaciones()  As String
-	habitaciones = Array As String("baño","dormitorio","cocina")
-	Dim periferico=""
+	Dim habitacion	 	As String
 	Dim perifericos()  	As String
-	perifericos = Array As String("luz","aire","ventilador")
+	Dim periferico	 	As String
+	comando				= ""
+	comandos 			= Array As String("prender","apagar")
+	habitacion			=""
+	habitaciones 		= Array As String("baño","dormitorio","cocina")
+	periferico			=""
+	perifericos 		= Array As String("luz","aire","ventilador")
 End Sub
 
 Sub Globals
@@ -58,7 +65,7 @@ Sub Globals
 	Private off 		As Button
 	Private on 			As Button
 	Private ipSwitch 	As String
-	Dim TTS1 As TTS
+	Dim TTS1 			As TTS
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -66,6 +73,8 @@ Sub Activity_Create(FirstTime As Boolean)
 	'Activity.LoadLayout("Layout1")
 	Activity.LoadLayout("gemivMain")
 	If FirstTime Then
+		runtimeAdmin.CheckAndRequest(runtimeAdmin.PERMISSION_WRITE_EXTERNAL_STORAGE)
+		Wait For Activity_PermissionResult (Permission As String, Result As Boolean)
 		voiceRec.Initialize(Null,"Hable por favor")
 		udpCom.Initialize(8889,8888,8120)
 		TTS1.Initialize("TTS1")
@@ -86,9 +95,9 @@ Sub listen_Click
 End Sub
 
 Sub setRecTextField
-	Dim result As List = voiceRec.getRecognizedText
-	recText.Text = result.Get(0)
-	Dim texto As String = result.Get(0)
+	Dim Result As List = voiceRec.getRecognizedText
+	recText.Text = Result.Get(0)
+	Dim texto As String = Result.Get(0)
 	Dim palabras() As String
 	Dim pregunta As String
 
