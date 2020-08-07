@@ -372,6 +372,7 @@ BA.applicationContext.stopService(new android.content.Intent(BA.applicationConte
 public anywheresoftware.b4a.keywords.Common __c = null;
 public static b4a.gemiv.app.hub.gemivspeechreconigtion _voicerec = null;
 public static b4a.gemiv.app.hub.gemivudpcomunication _udpcom = null;
+public static b4a.gemiv.app.hub.gemivdbmanager _dbmanager = null;
 public static anywheresoftware.b4a.objects.RuntimePermissions _runtimeadmin = null;
 public static String[] _comandos = null;
 public static String _comando = "";
@@ -461,14 +462,20 @@ parent._udpcom._initialize /*String*/ (null,processBA,(int) (8889),(int) (8888),
 RDebugUtils.currentLine=131081;
  //BA.debugLineNum = 131081;BA.debugLine="TTS1.Initialize(\"TTS1\")";
 parent.mostCurrent._tts1.Initialize(processBA,"TTS1");
+RDebugUtils.currentLine=131082;
+ //BA.debugLineNum = 131082;BA.debugLine="dbManager.Initialize(\"gemiv\",\"gemivdb.db\")";
+parent._dbmanager._initialize /*String*/ (null,processBA,"gemiv","gemivdb.db");
+RDebugUtils.currentLine=131083;
+ //BA.debugLineNum = 131083;BA.debugLine="dbManager.logDefaultDirs";
+parent._dbmanager._logdefaultdirs /*String*/ (null);
  if (true) break;
 
 case 4:
 //C
 this.state = -1;
 ;
-RDebugUtils.currentLine=131083;
- //BA.debugLineNum = 131083;BA.debugLine="End Sub";
+RDebugUtils.currentLine=131085;
+ //BA.debugLineNum = 131085;BA.debugLine="End Sub";
 if (true) break;
 
             }
@@ -686,10 +693,10 @@ RDebugUtils.currentLine=393226;
 _list1.Initialize2(anywheresoftware.b4a.keywords.Common.ArrayToList(parent._comandos));
 RDebugUtils.currentLine=393227;
  //BA.debugLineNum = 393227;BA.debugLine="Log(list1)";
-anywheresoftware.b4a.keywords.Common.LogImpl("3393227",BA.ObjectToString(_list1),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("0393227",BA.ObjectToString(_list1),0);
 RDebugUtils.currentLine=393228;
  //BA.debugLineNum = 393228;BA.debugLine="Log(palabras(i))";
-anywheresoftware.b4a.keywords.Common.LogImpl("3393228",_palabras[_i],0);
+anywheresoftware.b4a.keywords.Common.LogImpl("0393228",_palabras[_i],0);
 RDebugUtils.currentLine=393229;
  //BA.debugLineNum = 393229;BA.debugLine="If list1.IndexOf(palabras(i).ToLowerCase) <> -1";
 if (true) break;
@@ -839,7 +846,7 @@ RDebugUtils.currentLine=393251;
 _pregunta = _pregunta+"?";
 RDebugUtils.currentLine=393252;
  //BA.debugLineNum = 393252;BA.debugLine="Log(pregunta)";
-anywheresoftware.b4a.keywords.Common.LogImpl("3393252",_pregunta,0);
+anywheresoftware.b4a.keywords.Common.LogImpl("0393252",_pregunta,0);
 RDebugUtils.currentLine=393253;
  //BA.debugLineNum = 393253;BA.debugLine="If pregunta.Length>2 Then";
 if (true) break;
@@ -881,13 +888,13 @@ case 31:
 this.state = 32;
 RDebugUtils.currentLine=393259;
  //BA.debugLineNum = 393259;BA.debugLine="Log(comando)";
-anywheresoftware.b4a.keywords.Common.LogImpl("3393259",parent._comando,0);
+anywheresoftware.b4a.keywords.Common.LogImpl("0393259",parent._comando,0);
 RDebugUtils.currentLine=393260;
  //BA.debugLineNum = 393260;BA.debugLine="Log(habitacion)";
-anywheresoftware.b4a.keywords.Common.LogImpl("3393260",parent._habitacion,0);
+anywheresoftware.b4a.keywords.Common.LogImpl("0393260",parent._habitacion,0);
 RDebugUtils.currentLine=393261;
  //BA.debugLineNum = 393261;BA.debugLine="Log(periferico)";
-anywheresoftware.b4a.keywords.Common.LogImpl("3393261",parent._periferico,0);
+anywheresoftware.b4a.keywords.Common.LogImpl("0393261",parent._periferico,0);
 RDebugUtils.currentLine=393262;
  //BA.debugLineNum = 393262;BA.debugLine="udpCom.sendBroadcastUdp(comando.ToLowerCase&\"|\"&";
 parent._udpcom._sendbroadcastudp /*String*/ (null,parent._comando.toLowerCase()+"|"+parent._habitacion.toLowerCase()+"|"+parent._periferico.toLowerCase());

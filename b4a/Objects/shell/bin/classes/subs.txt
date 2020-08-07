@@ -6,51 +6,51 @@ gemivudpcomunication
 gemivdbmanager
 1
 dbutils
-main,activity_create,1,0,51,62
-,beginlisten,,getcommand,,ip,,listen,,mac,,off,,on,,rectext,,response,,runtimeadmin,,voicerec,,udpcom,,tts1
+main,activity_create,1,0,52,65
+,beginlisten,,getcommand,,ip,,listen,,mac,,off,,on,,rectext,,response,,runtimeadmin,,voicerec,,udpcom,,tts1,,dbmanager
 ,beginlisten,,getcommand,,ip,,listen,,mac,,off,,on,,rectext,,response
-gemivspeechreconigtion,initialize,gemivudpcomunication,initialize,gemivudpcomunication,getbroadcastip
-main,activity_pause,0,0,68,70
+gemivspeechreconigtion,initialize,gemivudpcomunication,initialize,gemivdbmanager,initialize,gemivdbmanager,logdefaultdirs,gemivudpcomunication,getbroadcastip,gemivdbmanager,connectdatabase
+main,activity_pause,0,0,71,73
 
 
 
-main,activity_resume,0,0,64,66
+main,activity_resume,0,0,67,69
 
 
 
-main,beginlisten_click,0,0,150,152
+main,beginlisten_click,0,0,153,155
 ,udpcom,,ipswitch
 
 gemivudpcomunication,senddirectudp
-main,getcommand_click,0,0,146,148
+main,getcommand_click,0,0,149,151
 ,udpcom
 
 gemivudpcomunication,sendbroadcastudp
-main,globals,0,1,35,49
+main,globals,0,1,36,50
 
 
 
-main,listen_click,0,0,73,75
+main,listen_click,0,0,76,78
 ,voicerec
 
 gemivspeechreconigtion,listenspeech
-main,off_click,0,0,154,156
+main,off_click,0,0,157,159
 ,udpcom,,ipswitch
 
 gemivudpcomunication,senddirectudp
-main,on_click,0,0,158,160
+main,on_click,0,0,161,163
 ,udpcom,,ipswitch
 
 gemivudpcomunication,senddirectudp
-main,process_globals,0,1,15,33
+main,process_globals,0,1,15,34
 ,comando,,comandos,,habitacion,,habitaciones,,periferico,,perifericos
 ,comando,,comandos,,habitacion,,habitaciones,,periferico,,perifericos
 
-main,readudppacket,1,0,131,143
+main,readudppacket,1,0,134,146
 ,udpcom,,ipswitch,,mac,,ip
 ,ipswitch
 gemivudpcomunication,getmessagedatagram
-main,setrectextfield,1,0,77,129
+main,setrectextfield,1,0,80,132
 ,voicerec,,rectext,,comandos,,comando,,habitaciones,,habitacion,,perifericos,,periferico,,tts1,,udpcom
 ,comando,,habitacion,,periferico
 gemivspeechreconigtion,getrecognizedtext,gemivspeechreconigtion,listenspeech,gemivudpcomunication,sendbroadcastudp
@@ -118,6 +118,26 @@ gemivudpcomunication,udp_packetarrived,1,0,44,49
 main,udpcom,main,ipswitch,main,mac,main,ip
 main,ipswitch
 main,readudppacket,,getmessagedatagram
+gemivdbmanager,initialize,0,0,9,20
+
+
+,connectdatabase
+gemivdbmanager,logdefaultdirs,0,0,33,39
+
+
+
+gemivdbmanager,class_globals,0,0,1,6
+
+
+
+gemivdbmanager,connectdatabase,0,0,22,24
+
+
+
+gemivdbmanager,createdevices,0,0,26,31
+
+
+
 starter,application_error,0,0,27,29
 
 
@@ -142,18 +162,6 @@ starter,service_taskremoved,0,0,22,24
 
 
 
-gemivdbmanager,class_globals,0,0,1,6
-
-
-
-gemivdbmanager,connectdatabase,0,0,27,29
-
-
-
-gemivdbmanager,initialize,0,0,9,25
-
-
-,connectdatabase
 dbutils,copydbfromassets,0,0,52,58
 
 

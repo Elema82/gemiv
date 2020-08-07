@@ -57,6 +57,7 @@ public boolean isSingleton() {
 public static RemoteObject __c = RemoteObject.declareNull("anywheresoftware.b4a.keywords.Common");
 public static RemoteObject _voicerec = RemoteObject.declareNull("b4a.gemiv.app.hub.gemivspeechreconigtion");
 public static RemoteObject _udpcom = RemoteObject.declareNull("b4a.gemiv.app.hub.gemivudpcomunication");
+public static RemoteObject _dbmanager = RemoteObject.declareNull("b4a.gemiv.app.hub.gemivdbmanager");
 public static RemoteObject _runtimeadmin = RemoteObject.declareNull("anywheresoftware.b4a.objects.RuntimePermissions");
 public static RemoteObject _comandos = null;
 public static RemoteObject _comando = RemoteObject.createImmutable("");
@@ -78,6 +79,6 @@ public static RemoteObject _tts1 = RemoteObject.declareNull("anywheresoftware.b4
 public static b4a.gemiv.app.hub.starter _starter = null;
 public static b4a.gemiv.app.hub.dbutils _dbutils = null;
   public Object[] GetGlobals() {
-		return new Object[] {"Activity",main.mostCurrent._activity,"beginlisten",main.mostCurrent._beginlisten,"comando",main._comando,"comandos",main._comandos,"DBUtils",Debug.moduleToString(b4a.gemiv.app.hub.dbutils.class),"getcommand",main.mostCurrent._getcommand,"habitacion",main._habitacion,"habitaciones",main._habitaciones,"ip",main.mostCurrent._ip,"ipSwitch",main.mostCurrent._ipswitch,"listen",main.mostCurrent._listen,"mac",main.mostCurrent._mac,"off",main.mostCurrent._off,"on",main.mostCurrent._on,"periferico",main._periferico,"perifericos",main._perifericos,"recText",main.mostCurrent._rectext,"response",main.mostCurrent._response,"runtimeAdmin",main._runtimeadmin,"Starter",Debug.moduleToString(b4a.gemiv.app.hub.starter.class),"TTS1",main.mostCurrent._tts1,"udpCom",main._udpcom,"voiceRec",main._voicerec};
+		return new Object[] {"Activity",main.mostCurrent._activity,"beginlisten",main.mostCurrent._beginlisten,"comando",main._comando,"comandos",main._comandos,"dbManager",main._dbmanager,"DBUtils",Debug.moduleToString(b4a.gemiv.app.hub.dbutils.class),"getcommand",main.mostCurrent._getcommand,"habitacion",main._habitacion,"habitaciones",main._habitaciones,"ip",main.mostCurrent._ip,"ipSwitch",main.mostCurrent._ipswitch,"listen",main.mostCurrent._listen,"mac",main.mostCurrent._mac,"off",main.mostCurrent._off,"on",main.mostCurrent._on,"periferico",main._periferico,"perifericos",main._perifericos,"recText",main.mostCurrent._rectext,"response",main.mostCurrent._response,"runtimeAdmin",main._runtimeadmin,"Starter",Debug.moduleToString(b4a.gemiv.app.hub.starter.class),"TTS1",main.mostCurrent._tts1,"udpCom",main._udpcom,"voiceRec",main._voicerec};
 }
 }

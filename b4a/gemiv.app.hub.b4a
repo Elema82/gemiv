@@ -1,6 +1,8 @@
 ﻿Build1=gemiv,b4a.gemiv.app.hub
-File1=gemivMain.bal
+File1=gemivdb.db
+File2=gemivMain.bal
 FileGroup1=Default Group
+FileGroup2=Default Group
 Group=Default Group
 Library1=core
 Library2=phone
@@ -13,7 +15,7 @@ Module1=GemivDBManager
 Module2=GemivSpeechReconigtion
 Module3=GemivUdpComunication
 Module4=Starter
-NumberOfFiles=1
+NumberOfFiles=2
 NumberOfLibraries=6
 NumberOfModules=4
 Version=9.801
@@ -37,6 +39,7 @@ Sub Process_Globals
 	'These variables can be accessed from all modules.
 	Dim voiceRec 		As GemivSpeechReconigtion
 	Dim udpCom			As GemivUdpComunication
+	Dim dbManager		As GemivDBManager
 	Dim runtimeAdmin	As RuntimePermissions
 	Dim comandos()  	As String
 	Dim comando	 		As String
@@ -78,6 +81,8 @@ Sub Activity_Create(FirstTime As Boolean)
 		voiceRec.Initialize(Null,"Hable por favor")
 		udpCom.Initialize(8889,8888,8120)
 		TTS1.Initialize("TTS1")
+		dbManager.Initialize("gemiv","gemivdb.db")
+		dbManager.logDefaultDirs
 	End If
 End Sub
 
