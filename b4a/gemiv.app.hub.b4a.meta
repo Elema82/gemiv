@@ -13,6 +13,6 @@ ModuleClosedNodes1=
 ModuleClosedNodes2=
 ModuleClosedNodes3=
 ModuleClosedNodes4=
-NavigationStack=GemivDBManager,logDefaultDirs,33,0,GemivDBManager,Initialize,12,0,GemivDBManager,connectDataBase,22,0,GemivDBManager,ExecQueryStatment,33,0,GemivDBManager,Class_Globals,0,0,GemivUdpComunication,Class_Globals,0,0,GemivSpeechReconigtion,Class_Globals,0,0,Main,readUDPPacket,133,0,Main,Activity_Create,62,6,GemivDBManager,ExecNonQueryStatment,30,1
+NavigationStack=GemivDBManager,ExecQueryStatment,33,0,GemivDBManager,Class_Globals,0,0,Main,readUDPPacket,133,0,GemivUdpComunication,Class_Globals,0,0,GemivUdpComunication,UDP_PacketArrived,43,0,Main,Activity_Create,62,6,GemivSpeechReconigtion,Class_Globals,0,0,GemivDBManager,ExecNonQueryStatment,30,1,GemivUdpComunication,sendDirectUdp,39,0,Main,Process_Globals,22,0
 SelectedBuild=0
 VisibleModules=2,4,3,1
