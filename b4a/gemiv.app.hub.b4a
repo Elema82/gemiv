@@ -12,12 +12,13 @@ Library5=dbutils
 Library6=runtimepermissions
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.DarkTheme)~\n~'End of default text.~\n~
 Module1=GemivDBManager
-Module2=GemivSpeechReconigtion
-Module3=GemivUdpComunication
-Module4=Starter
+Module2=GemivGlobals
+Module3=GemivSpeechReconigtion
+Module4=GemivUdpComunication
+Module5=Starter
 NumberOfFiles=2
 NumberOfLibraries=6
-NumberOfModules=4
+NumberOfModules=5
 Version=9.801
 @EndOfDesignText@
 #Region  Project Attributes 
@@ -69,6 +70,9 @@ Sub Globals
 	Private on 			As Button
 	Private ipSwitch 	As String
 	Dim TTS1 			As TTS
+	Private adddevice As Button
+	Private cleardevices As Button
+	Private nombreDispositivo As EditText
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -182,4 +186,23 @@ End Sub
 
 Sub on_Click
 	udpCom.sendDirectUdp("prender",ipSwitch,0)
+End Sub
+
+Sub adddevice_Click
+	Dim qry As String = GemivGlobals.qryInsertDevices(nombreDispositivo.Text,"192.168.0.67","00:00:00:00:00:00",1)
+	If dbManager.ExecNonQueryStatment(qry) Then
+		ToastMessageShow ("Dispositivo Guardado", True)
+	Else
+		ToastMessageShow ("Error", True)
+	End If
+	
+End Sub
+
+Sub cleardevices_Click
+	Dim qry As String = GemivGlobals.qryDeleteDevices(nombreDispositivo.Text)
+	If dbManager.ExecNonQueryStatment(qry)  Then
+		ToastMessageShow ("Dispositivo Borrado", True)
+	Else
+		ToastMessageShow ("Error", True)
+	End If
 End Sub

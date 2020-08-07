@@ -33,7 +33,7 @@ public class main extends Activity implements B4AActivity{
 		super.onCreate(savedInstanceState);
         mostCurrent = this;
 		if (processBA == null) {
-			processBA = new BA(this.getApplicationContext(), null, null, "b4a.gemiv.app.hub", "b4a.gemiv.app.hub.main");
+			processBA = new anywheresoftware.b4a.ShellBA(this.getApplicationContext(), null, null, "b4a.gemiv.app.hub", "b4a.gemiv.app.hub.main");
 			processBA.loadHtSubs(this.getClass());
 	        float deviceScale = getApplicationContext().getResources().getDisplayMetrics().density;
 	        BALayout.setDeviceScale(deviceScale);
@@ -328,6 +328,47 @@ public class main extends Activity implements B4AActivity{
             
     }
 
+
+
+public static void initializeProcessGlobals() {
+    
+    if (main.processGlobalsRun == false) {
+	    main.processGlobalsRun = true;
+		try {
+		        		
+        } catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+    }
+}
+public static boolean isAnyActivityVisible() {
+    boolean vis = false;
+vis = vis | (main.mostCurrent != null);
+return vis;}
+
+private static BA killProgramHelper(BA ba) {
+    if (ba == null)
+        return null;
+    anywheresoftware.b4a.BA.SharedProcessBA sharedProcessBA = ba.sharedProcessBA;
+    if (sharedProcessBA == null || sharedProcessBA.activityBA == null)
+        return null;
+    return sharedProcessBA.activityBA.get();
+}
+public static void killProgram() {
+     {
+            Activity __a = null;
+            if (main.previousOne != null) {
+				__a = main.previousOne.get();
+			}
+            else {
+                BA ba = killProgramHelper(main.mostCurrent == null ? null : main.mostCurrent.processBA);
+                if (ba != null) __a = ba.activity;
+            }
+            if (__a != null)
+				__a.finish();}
+
+BA.applicationContext.stopService(new android.content.Intent(BA.applicationContext, starter.class));
+}
 public anywheresoftware.b4a.keywords.Common __c = null;
 public static b4a.gemiv.app.hub.gemivspeechreconigtion _voicerec = null;
 public static b4a.gemiv.app.hub.gemivudpcomunication _udpcom = null;
@@ -350,14 +391,16 @@ public anywheresoftware.b4a.objects.ButtonWrapper _off = null;
 public anywheresoftware.b4a.objects.ButtonWrapper _on = null;
 public static String _ipswitch = "";
 public anywheresoftware.b4a.obejcts.TTS _tts1 = null;
+public anywheresoftware.b4a.objects.ButtonWrapper _adddevice = null;
+public anywheresoftware.b4a.objects.ButtonWrapper _cleardevices = null;
+public anywheresoftware.b4a.objects.EditTextWrapper _nombredispositivo = null;
 public b4a.gemiv.app.hub.starter _starter = null;
+public b4a.gemiv.app.hub.gemivglobals _gemivglobals = null;
 public b4a.gemiv.app.hub.dbutils _dbutils = null;
-
-public static boolean isAnyActivityVisible() {
-    boolean vis = false;
-vis = vis | (main.mostCurrent != null);
-return vis;}
 public static void  _activity_create(boolean _firsttime) throws Exception{
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "activity_create", false))
+	 {Debug.delegate(mostCurrent.activityBA, "activity_create", new Object[] {_firsttime}); return;}
 ResumableSub_Activity_Create rsub = new ResumableSub_Activity_Create(null,_firsttime);
 rsub.resume(processBA, null);
 }
@@ -373,6 +416,7 @@ boolean _result = false;
 
 @Override
 public void resume(BA ba, Object[] result) throws Exception{
+RDebugUtils.currentModule="main";
 
     while (true) {
         switch (state) {
@@ -382,9 +426,11 @@ return;
 case 0:
 //C
 this.state = 1;
- //BA.debugLineNum = 55;BA.debugLine="Activity.LoadLayout(\"gemivMain\")";
+RDebugUtils.currentLine=1638403;
+ //BA.debugLineNum = 1638403;BA.debugLine="Activity.LoadLayout(\"gemivMain\")";
 parent.mostCurrent._activity.LoadLayout("gemivMain",mostCurrent.activityBA);
- //BA.debugLineNum = 56;BA.debugLine="If FirstTime Then";
+RDebugUtils.currentLine=1638404;
+ //BA.debugLineNum = 1638404;BA.debugLine="If FirstTime Then";
 if (true) break;
 
 case 1:
@@ -397,10 +443,12 @@ this.state = 3;
 case 3:
 //C
 this.state = 4;
- //BA.debugLineNum = 57;BA.debugLine="runtimeAdmin.CheckAndRequest(runtimeAdmin.PERMIS";
+RDebugUtils.currentLine=1638405;
+ //BA.debugLineNum = 1638405;BA.debugLine="runtimeAdmin.CheckAndRequest(runtimeAdmin.PERMIS";
 parent._runtimeadmin.CheckAndRequest(processBA,parent._runtimeadmin.PERMISSION_WRITE_EXTERNAL_STORAGE);
- //BA.debugLineNum = 58;BA.debugLine="Wait For Activity_PermissionResult (Permission A";
-anywheresoftware.b4a.keywords.Common.WaitFor("activity_permissionresult", processBA, this, null);
+RDebugUtils.currentLine=1638406;
+ //BA.debugLineNum = 1638406;BA.debugLine="Wait For Activity_PermissionResult (Permission A";
+anywheresoftware.b4a.keywords.Common.WaitFor("activity_permissionresult", processBA, new anywheresoftware.b4a.shell.DebugResumableSub.DelegatableResumableSub(this, "main", "activity_create"), null);
 this.state = 5;
 return;
 case 5:
@@ -409,184 +457,211 @@ this.state = 4;
 _permission = (String) result[0];
 _result = (Boolean) result[1];
 ;
- //BA.debugLineNum = 59;BA.debugLine="voiceRec.Initialize(Null,\"Hable por favor\")";
-parent._voicerec._initialize /*String*/ (processBA,BA.ObjectToString(anywheresoftware.b4a.keywords.Common.Null),"Hable por favor");
- //BA.debugLineNum = 60;BA.debugLine="udpCom.Initialize(8889,8888,8120)";
-parent._udpcom._initialize /*String*/ (processBA,(int) (8889),(int) (8888),(int) (8120));
- //BA.debugLineNum = 61;BA.debugLine="TTS1.Initialize(\"TTS1\")";
+RDebugUtils.currentLine=1638407;
+ //BA.debugLineNum = 1638407;BA.debugLine="voiceRec.Initialize(Null,\"Hable por favor\")";
+parent._voicerec._initialize /*String*/ (null,processBA,BA.ObjectToString(anywheresoftware.b4a.keywords.Common.Null),"Hable por favor");
+RDebugUtils.currentLine=1638408;
+ //BA.debugLineNum = 1638408;BA.debugLine="udpCom.Initialize(8889,8888,8120)";
+parent._udpcom._initialize /*String*/ (null,processBA,(int) (8889),(int) (8888),(int) (8120));
+RDebugUtils.currentLine=1638409;
+ //BA.debugLineNum = 1638409;BA.debugLine="TTS1.Initialize(\"TTS1\")";
 parent.mostCurrent._tts1.Initialize(processBA,"TTS1");
- //BA.debugLineNum = 62;BA.debugLine="dbManager.Initialize(\"gemiv\",\"gemivdb.db\")";
-parent._dbmanager._initialize /*String*/ (processBA,"gemiv","gemivdb.db");
- //BA.debugLineNum = 63;BA.debugLine="dbManager.logDefaultDirs";
-parent._dbmanager._logdefaultdirs /*String*/ ();
+RDebugUtils.currentLine=1638410;
+ //BA.debugLineNum = 1638410;BA.debugLine="dbManager.Initialize(\"gemiv\",\"gemivdb.db\")";
+parent._dbmanager._initialize /*String*/ (null,processBA,"gemiv","gemivdb.db");
+RDebugUtils.currentLine=1638411;
+ //BA.debugLineNum = 1638411;BA.debugLine="dbManager.logDefaultDirs";
+parent._dbmanager._logdefaultdirs /*String*/ (null);
  if (true) break;
 
 case 4:
 //C
 this.state = -1;
 ;
- //BA.debugLineNum = 65;BA.debugLine="End Sub";
+RDebugUtils.currentLine=1638413;
+ //BA.debugLineNum = 1638413;BA.debugLine="End Sub";
 if (true) break;
 
             }
         }
     }
 }
-public static void  _activity_permissionresult(String _permission,boolean _result) throws Exception{
-}
 public static String  _activity_pause(boolean _userclosed) throws Exception{
- //BA.debugLineNum = 71;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
- //BA.debugLineNum = 73;BA.debugLine="End Sub";
+RDebugUtils.currentModule="main";
+RDebugUtils.currentLine=1769472;
+ //BA.debugLineNum = 1769472;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
+RDebugUtils.currentLine=1769474;
+ //BA.debugLineNum = 1769474;BA.debugLine="End Sub";
 return "";
 }
 public static String  _activity_resume() throws Exception{
- //BA.debugLineNum = 67;BA.debugLine="Sub Activity_Resume";
- //BA.debugLineNum = 69;BA.debugLine="End Sub";
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "activity_resume", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "activity_resume", null));}
+RDebugUtils.currentLine=1703936;
+ //BA.debugLineNum = 1703936;BA.debugLine="Sub Activity_Resume";
+RDebugUtils.currentLine=1703938;
+ //BA.debugLineNum = 1703938;BA.debugLine="End Sub";
+return "";
+}
+public static String  _adddevice_click() throws Exception{
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "adddevice_click", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "adddevice_click", null));}
+String _qry = "";
+RDebugUtils.currentLine=2293760;
+ //BA.debugLineNum = 2293760;BA.debugLine="Sub adddevice_Click";
+RDebugUtils.currentLine=2293761;
+ //BA.debugLineNum = 2293761;BA.debugLine="Dim qry As String = GemivGlobals.qryInsertDevices";
+_qry = mostCurrent._gemivglobals._qryinsertdevices /*String*/ (mostCurrent.activityBA,mostCurrent._nombredispositivo.getText(),"192.168.0.67","00:00:00:00:00:00",(int) (1));
+RDebugUtils.currentLine=2293762;
+ //BA.debugLineNum = 2293762;BA.debugLine="If dbManager.ExecNonQueryStatment(qry) Then";
+if (_dbmanager._execnonquerystatment /*boolean*/ (null,_qry)) { 
+RDebugUtils.currentLine=2293763;
+ //BA.debugLineNum = 2293763;BA.debugLine="ToastMessageShow (\"Dispositivo Guardado\", True)";
+anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Dispositivo Guardado"),anywheresoftware.b4a.keywords.Common.True);
+ }else {
+RDebugUtils.currentLine=2293765;
+ //BA.debugLineNum = 2293765;BA.debugLine="ToastMessageShow (\"Error\", True)";
+anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Error"),anywheresoftware.b4a.keywords.Common.True);
+ };
+RDebugUtils.currentLine=2293768;
+ //BA.debugLineNum = 2293768;BA.debugLine="End Sub";
 return "";
 }
 public static String  _beginlisten_click() throws Exception{
- //BA.debugLineNum = 153;BA.debugLine="Sub beginlisten_Click";
- //BA.debugLineNum = 154;BA.debugLine="udpCom.sendDirectUdp(\"BEGINLISTEN\",ipSwitch,0)";
-_udpcom._senddirectudp /*String*/ ("BEGINLISTEN",mostCurrent._ipswitch,(int) (0));
- //BA.debugLineNum = 155;BA.debugLine="End Sub";
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "beginlisten_click", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "beginlisten_click", null));}
+RDebugUtils.currentLine=2097152;
+ //BA.debugLineNum = 2097152;BA.debugLine="Sub beginlisten_Click";
+RDebugUtils.currentLine=2097153;
+ //BA.debugLineNum = 2097153;BA.debugLine="udpCom.sendDirectUdp(\"BEGINLISTEN\",ipSwitch,0)";
+_udpcom._senddirectudp /*String*/ (null,"BEGINLISTEN",mostCurrent._ipswitch,(int) (0));
+RDebugUtils.currentLine=2097154;
+ //BA.debugLineNum = 2097154;BA.debugLine="End Sub";
+return "";
+}
+public static String  _cleardevices_click() throws Exception{
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "cleardevices_click", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "cleardevices_click", null));}
+String _qry = "";
+RDebugUtils.currentLine=2359296;
+ //BA.debugLineNum = 2359296;BA.debugLine="Sub cleardevices_Click";
+RDebugUtils.currentLine=2359297;
+ //BA.debugLineNum = 2359297;BA.debugLine="Dim qry As String = GemivGlobals.qryDeleteDevices";
+_qry = mostCurrent._gemivglobals._qrydeletedevices /*String*/ (mostCurrent.activityBA,mostCurrent._nombredispositivo.getText());
+RDebugUtils.currentLine=2359298;
+ //BA.debugLineNum = 2359298;BA.debugLine="If dbManager.ExecNonQueryStatment(qry)  Then";
+if (_dbmanager._execnonquerystatment /*boolean*/ (null,_qry)) { 
+RDebugUtils.currentLine=2359299;
+ //BA.debugLineNum = 2359299;BA.debugLine="ToastMessageShow (\"Dispositivo Borrado\", True)";
+anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Dispositivo Borrado"),anywheresoftware.b4a.keywords.Common.True);
+ }else {
+RDebugUtils.currentLine=2359301;
+ //BA.debugLineNum = 2359301;BA.debugLine="ToastMessageShow (\"Error\", True)";
+anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Error"),anywheresoftware.b4a.keywords.Common.True);
+ };
+RDebugUtils.currentLine=2359303;
+ //BA.debugLineNum = 2359303;BA.debugLine="End Sub";
 return "";
 }
 public static String  _getcommand_click() throws Exception{
- //BA.debugLineNum = 149;BA.debugLine="Sub getcommand_Click";
- //BA.debugLineNum = 150;BA.debugLine="udpCom.sendBroadcastUdp(\"GETCOMMAND\")";
-_udpcom._sendbroadcastudp /*String*/ ("GETCOMMAND");
- //BA.debugLineNum = 151;BA.debugLine="End Sub";
-return "";
-}
-public static String  _globals() throws Exception{
- //BA.debugLineNum = 36;BA.debugLine="Sub Globals";
- //BA.debugLineNum = 39;BA.debugLine="Private recText 	As EditText";
-mostCurrent._rectext = new anywheresoftware.b4a.objects.EditTextWrapper();
- //BA.debugLineNum = 40;BA.debugLine="Private listen 		As Button";
-mostCurrent._listen = new anywheresoftware.b4a.objects.ButtonWrapper();
- //BA.debugLineNum = 41;BA.debugLine="Private ip 			As EditText";
-mostCurrent._ip = new anywheresoftware.b4a.objects.EditTextWrapper();
- //BA.debugLineNum = 42;BA.debugLine="Private response 	As EditText";
-mostCurrent._response = new anywheresoftware.b4a.objects.EditTextWrapper();
- //BA.debugLineNum = 43;BA.debugLine="Private mac		 	As EditText";
-mostCurrent._mac = new anywheresoftware.b4a.objects.EditTextWrapper();
- //BA.debugLineNum = 44;BA.debugLine="Private getcommand 	As Button";
-mostCurrent._getcommand = new anywheresoftware.b4a.objects.ButtonWrapper();
- //BA.debugLineNum = 45;BA.debugLine="Private beginlisten As Button";
-mostCurrent._beginlisten = new anywheresoftware.b4a.objects.ButtonWrapper();
- //BA.debugLineNum = 46;BA.debugLine="Private off 		As Button";
-mostCurrent._off = new anywheresoftware.b4a.objects.ButtonWrapper();
- //BA.debugLineNum = 47;BA.debugLine="Private on 			As Button";
-mostCurrent._on = new anywheresoftware.b4a.objects.ButtonWrapper();
- //BA.debugLineNum = 48;BA.debugLine="Private ipSwitch 	As String";
-mostCurrent._ipswitch = "";
- //BA.debugLineNum = 49;BA.debugLine="Dim TTS1 			As TTS";
-mostCurrent._tts1 = new anywheresoftware.b4a.obejcts.TTS();
- //BA.debugLineNum = 50;BA.debugLine="End Sub";
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "getcommand_click", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "getcommand_click", null));}
+RDebugUtils.currentLine=2031616;
+ //BA.debugLineNum = 2031616;BA.debugLine="Sub getcommand_Click";
+RDebugUtils.currentLine=2031617;
+ //BA.debugLineNum = 2031617;BA.debugLine="udpCom.sendBroadcastUdp(\"GETCOMMAND\")";
+_udpcom._sendbroadcastudp /*String*/ (null,"GETCOMMAND");
+RDebugUtils.currentLine=2031618;
+ //BA.debugLineNum = 2031618;BA.debugLine="End Sub";
 return "";
 }
 public static String  _listen_click() throws Exception{
- //BA.debugLineNum = 76;BA.debugLine="Sub listen_Click";
- //BA.debugLineNum = 77;BA.debugLine="voiceRec.listenSpeech";
-_voicerec._listenspeech /*String*/ ();
- //BA.debugLineNum = 78;BA.debugLine="End Sub";
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "listen_click", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "listen_click", null));}
+RDebugUtils.currentLine=1835008;
+ //BA.debugLineNum = 1835008;BA.debugLine="Sub listen_Click";
+RDebugUtils.currentLine=1835009;
+ //BA.debugLineNum = 1835009;BA.debugLine="voiceRec.listenSpeech";
+_voicerec._listenspeech /*String*/ (null);
+RDebugUtils.currentLine=1835010;
+ //BA.debugLineNum = 1835010;BA.debugLine="End Sub";
 return "";
 }
 public static String  _off_click() throws Exception{
- //BA.debugLineNum = 157;BA.debugLine="Sub off_Click";
- //BA.debugLineNum = 158;BA.debugLine="udpCom.sendDirectUdp(\"apagar\",ipSwitch,0)";
-_udpcom._senddirectudp /*String*/ ("apagar",mostCurrent._ipswitch,(int) (0));
- //BA.debugLineNum = 159;BA.debugLine="End Sub";
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "off_click", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "off_click", null));}
+RDebugUtils.currentLine=2162688;
+ //BA.debugLineNum = 2162688;BA.debugLine="Sub off_Click";
+RDebugUtils.currentLine=2162689;
+ //BA.debugLineNum = 2162689;BA.debugLine="udpCom.sendDirectUdp(\"apagar\",ipSwitch,0)";
+_udpcom._senddirectudp /*String*/ (null,"apagar",mostCurrent._ipswitch,(int) (0));
+RDebugUtils.currentLine=2162690;
+ //BA.debugLineNum = 2162690;BA.debugLine="End Sub";
 return "";
 }
 public static String  _on_click() throws Exception{
- //BA.debugLineNum = 161;BA.debugLine="Sub on_Click";
- //BA.debugLineNum = 162;BA.debugLine="udpCom.sendDirectUdp(\"prender\",ipSwitch,0)";
-_udpcom._senddirectudp /*String*/ ("prender",mostCurrent._ipswitch,(int) (0));
- //BA.debugLineNum = 163;BA.debugLine="End Sub";
-return "";
-}
-
-public static void initializeProcessGlobals() {
-    
-    if (main.processGlobalsRun == false) {
-	    main.processGlobalsRun = true;
-		try {
-		        main._process_globals();
-starter._process_globals();
-dbutils._process_globals();
-		
-        } catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-    }
-}public static String  _process_globals() throws Exception{
- //BA.debugLineNum = 15;BA.debugLine="Sub Process_Globals";
- //BA.debugLineNum = 18;BA.debugLine="Dim voiceRec 		As GemivSpeechReconigtion";
-_voicerec = new b4a.gemiv.app.hub.gemivspeechreconigtion();
- //BA.debugLineNum = 19;BA.debugLine="Dim udpCom			As GemivUdpComunication";
-_udpcom = new b4a.gemiv.app.hub.gemivudpcomunication();
- //BA.debugLineNum = 20;BA.debugLine="Dim dbManager		As GemivDBManager";
-_dbmanager = new b4a.gemiv.app.hub.gemivdbmanager();
- //BA.debugLineNum = 21;BA.debugLine="Dim runtimeAdmin	As RuntimePermissions";
-_runtimeadmin = new anywheresoftware.b4a.objects.RuntimePermissions();
- //BA.debugLineNum = 22;BA.debugLine="Dim comandos()  	As String";
-_comandos = new String[(int) (0)];
-java.util.Arrays.fill(_comandos,"");
- //BA.debugLineNum = 23;BA.debugLine="Dim comando	 		As String";
-_comando = "";
- //BA.debugLineNum = 24;BA.debugLine="Dim habitaciones()  As String";
-_habitaciones = new String[(int) (0)];
-java.util.Arrays.fill(_habitaciones,"");
- //BA.debugLineNum = 25;BA.debugLine="Dim habitacion	 	As String";
-_habitacion = "";
- //BA.debugLineNum = 26;BA.debugLine="Dim perifericos()  	As String";
-_perifericos = new String[(int) (0)];
-java.util.Arrays.fill(_perifericos,"");
- //BA.debugLineNum = 27;BA.debugLine="Dim periferico	 	As String";
-_periferico = "";
- //BA.debugLineNum = 28;BA.debugLine="comando				= \"\"";
-_comando = "";
- //BA.debugLineNum = 29;BA.debugLine="comandos 			= Array As String(\"prender\",\"apagar\")";
-_comandos = new String[]{"prender","apagar"};
- //BA.debugLineNum = 30;BA.debugLine="habitacion			=\"\"";
-_habitacion = "";
- //BA.debugLineNum = 31;BA.debugLine="habitaciones 		= Array As String(\"baño\",\"dormitor";
-_habitaciones = new String[]{"baño","dormitorio","cocina"};
- //BA.debugLineNum = 32;BA.debugLine="periferico			=\"\"";
-_periferico = "";
- //BA.debugLineNum = 33;BA.debugLine="perifericos 		= Array As String(\"luz\",\"aire\",\"ven";
-_perifericos = new String[]{"luz","aire","ventilador"};
- //BA.debugLineNum = 34;BA.debugLine="End Sub";
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "on_click", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "on_click", null));}
+RDebugUtils.currentLine=2228224;
+ //BA.debugLineNum = 2228224;BA.debugLine="Sub on_Click";
+RDebugUtils.currentLine=2228225;
+ //BA.debugLineNum = 2228225;BA.debugLine="udpCom.sendDirectUdp(\"prender\",ipSwitch,0)";
+_udpcom._senddirectudp /*String*/ (null,"prender",mostCurrent._ipswitch,(int) (0));
+RDebugUtils.currentLine=2228226;
+ //BA.debugLineNum = 2228226;BA.debugLine="End Sub";
 return "";
 }
 public static String  _readudppacket() throws Exception{
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "readudppacket", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "readudppacket", null));}
 String _dg = "";
 String[] _dataarray = null;
- //BA.debugLineNum = 134;BA.debugLine="Sub readUDPPacket";
- //BA.debugLineNum = 135;BA.debugLine="Dim dg As String = udpCom.getMessageDatagram.data";
-_dg = _udpcom._getmessagedatagram /*b4a.gemiv.app.hub.gemivudpcomunication._receiveddata*/ ().data /*String*/ ;
- //BA.debugLineNum = 136;BA.debugLine="ipSwitch         = udpCom.getMessageDatagram.ip";
-mostCurrent._ipswitch = _udpcom._getmessagedatagram /*b4a.gemiv.app.hub.gemivudpcomunication._receiveddata*/ ().ip /*String*/ ;
- //BA.debugLineNum = 137;BA.debugLine="Dim dataArray() As String";
+RDebugUtils.currentLine=1966080;
+ //BA.debugLineNum = 1966080;BA.debugLine="Sub readUDPPacket";
+RDebugUtils.currentLine=1966081;
+ //BA.debugLineNum = 1966081;BA.debugLine="Dim dg As String = udpCom.getMessageDatagram.data";
+_dg = _udpcom._getmessagedatagram /*b4a.gemiv.app.hub.gemivudpcomunication._receiveddata*/ (null).data /*String*/ ;
+RDebugUtils.currentLine=1966082;
+ //BA.debugLineNum = 1966082;BA.debugLine="ipSwitch         = udpCom.getMessageDatagram.ip";
+mostCurrent._ipswitch = _udpcom._getmessagedatagram /*b4a.gemiv.app.hub.gemivudpcomunication._receiveddata*/ (null).ip /*String*/ ;
+RDebugUtils.currentLine=1966083;
+ //BA.debugLineNum = 1966083;BA.debugLine="Dim dataArray() As String";
 _dataarray = new String[(int) (0)];
 java.util.Arrays.fill(_dataarray,"");
- //BA.debugLineNum = 138;BA.debugLine="dataArray = Regex.Split(\"\\: \",dg)";
+RDebugUtils.currentLine=1966084;
+ //BA.debugLineNum = 1966084;BA.debugLine="dataArray = Regex.Split(\"\\: \",dg)";
 _dataarray = anywheresoftware.b4a.keywords.Common.Regex.Split("\\: ",_dg);
- //BA.debugLineNum = 139;BA.debugLine="If dataArray(0)=\"MAC\" Then";
+RDebugUtils.currentLine=1966085;
+ //BA.debugLineNum = 1966085;BA.debugLine="If dataArray(0)=\"MAC\" Then";
 if ((_dataarray[(int) (0)]).equals("MAC")) { 
- //BA.debugLineNum = 140;BA.debugLine="mac.Text	 = dataArray(1)";
+RDebugUtils.currentLine=1966086;
+ //BA.debugLineNum = 1966086;BA.debugLine="mac.Text	 = dataArray(1)";
 mostCurrent._mac.setText(BA.ObjectToCharSequence(_dataarray[(int) (1)]));
  };
- //BA.debugLineNum = 142;BA.debugLine="If dataArray(0)=\"IP\" Then";
+RDebugUtils.currentLine=1966088;
+ //BA.debugLineNum = 1966088;BA.debugLine="If dataArray(0)=\"IP\" Then";
 if ((_dataarray[(int) (0)]).equals("IP")) { 
- //BA.debugLineNum = 143;BA.debugLine="ip.Text		 = dataArray(1)";
+RDebugUtils.currentLine=1966089;
+ //BA.debugLineNum = 1966089;BA.debugLine="ip.Text		 = dataArray(1)";
 mostCurrent._ip.setText(BA.ObjectToCharSequence(_dataarray[(int) (1)]));
  };
- //BA.debugLineNum = 146;BA.debugLine="End Sub";
+RDebugUtils.currentLine=1966092;
+ //BA.debugLineNum = 1966092;BA.debugLine="End Sub";
 return "";
 }
 public static void  _setrectextfield() throws Exception{
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "setrectextfield", false))
+	 {Debug.delegate(mostCurrent.activityBA, "setrectextfield", null); return;}
 ResumableSub_setRecTextField rsub = new ResumableSub_setRecTextField(null);
 rsub.resume(processBA, null);
 }
@@ -606,6 +681,7 @@ int limit7;
 
 @Override
 public void resume(BA ba, Object[] result) throws Exception{
+RDebugUtils.currentModule="main";
 
     while (true) {
         switch (state) {
@@ -615,21 +691,28 @@ return;
 case 0:
 //C
 this.state = 1;
- //BA.debugLineNum = 81;BA.debugLine="Dim Result As List = voiceRec.getRecognizedText";
+RDebugUtils.currentLine=1900545;
+ //BA.debugLineNum = 1900545;BA.debugLine="Dim Result As List = voiceRec.getRecognizedText";
 _result = new anywheresoftware.b4a.objects.collections.List();
-_result = parent._voicerec._getrecognizedtext /*anywheresoftware.b4a.objects.collections.List*/ ();
- //BA.debugLineNum = 82;BA.debugLine="recText.Text = Result.Get(0)";
+_result = parent._voicerec._getrecognizedtext /*anywheresoftware.b4a.objects.collections.List*/ (null);
+RDebugUtils.currentLine=1900546;
+ //BA.debugLineNum = 1900546;BA.debugLine="recText.Text = Result.Get(0)";
 parent.mostCurrent._rectext.setText(BA.ObjectToCharSequence(_result.Get((int) (0))));
- //BA.debugLineNum = 83;BA.debugLine="Dim texto As String = Result.Get(0)";
+RDebugUtils.currentLine=1900547;
+ //BA.debugLineNum = 1900547;BA.debugLine="Dim texto As String = Result.Get(0)";
 _texto = BA.ObjectToString(_result.Get((int) (0)));
- //BA.debugLineNum = 84;BA.debugLine="Dim palabras() As String";
+RDebugUtils.currentLine=1900548;
+ //BA.debugLineNum = 1900548;BA.debugLine="Dim palabras() As String";
 _palabras = new String[(int) (0)];
 java.util.Arrays.fill(_palabras,"");
- //BA.debugLineNum = 85;BA.debugLine="Dim pregunta As String";
+RDebugUtils.currentLine=1900549;
+ //BA.debugLineNum = 1900549;BA.debugLine="Dim pregunta As String";
 _pregunta = "";
- //BA.debugLineNum = 87;BA.debugLine="palabras = Regex.Split(\" \",texto)";
+RDebugUtils.currentLine=1900551;
+ //BA.debugLineNum = 1900551;BA.debugLine="palabras = Regex.Split(\" \",texto)";
 _palabras = anywheresoftware.b4a.keywords.Common.Regex.Split(" ",_texto);
- //BA.debugLineNum = 88;BA.debugLine="For i=0 To palabras.Length-1";
+RDebugUtils.currentLine=1900552;
+ //BA.debugLineNum = 1900552;BA.debugLine="For i=0 To palabras.Length-1";
 if (true) break;
 
 case 1:
@@ -656,15 +739,20 @@ if (true) break;
 case 3:
 //C
 this.state = 4;
- //BA.debugLineNum = 89;BA.debugLine="Dim list1 As List";
+RDebugUtils.currentLine=1900553;
+ //BA.debugLineNum = 1900553;BA.debugLine="Dim list1 As List";
 _list1 = new anywheresoftware.b4a.objects.collections.List();
- //BA.debugLineNum = 90;BA.debugLine="list1.Initialize2(comandos)";
+RDebugUtils.currentLine=1900554;
+ //BA.debugLineNum = 1900554;BA.debugLine="list1.Initialize2(comandos)";
 _list1.Initialize2(anywheresoftware.b4a.keywords.Common.ArrayToList(parent._comandos));
- //BA.debugLineNum = 91;BA.debugLine="Log(list1)";
-anywheresoftware.b4a.keywords.Common.LogImpl("3786443",BA.ObjectToString(_list1),0);
- //BA.debugLineNum = 92;BA.debugLine="Log(palabras(i))";
-anywheresoftware.b4a.keywords.Common.LogImpl("3786444",_palabras[_i],0);
- //BA.debugLineNum = 93;BA.debugLine="If list1.IndexOf(palabras(i).ToLowerCase) <> -1";
+RDebugUtils.currentLine=1900555;
+ //BA.debugLineNum = 1900555;BA.debugLine="Log(list1)";
+anywheresoftware.b4a.keywords.Common.LogImpl("51900555",BA.ObjectToString(_list1),0);
+RDebugUtils.currentLine=1900556;
+ //BA.debugLineNum = 1900556;BA.debugLine="Log(palabras(i))";
+anywheresoftware.b4a.keywords.Common.LogImpl("51900556",_palabras[_i],0);
+RDebugUtils.currentLine=1900557;
+ //BA.debugLineNum = 1900557;BA.debugLine="If list1.IndexOf(palabras(i).ToLowerCase) <> -1";
 if (true) break;
 
 case 4:
@@ -677,7 +765,8 @@ this.state = 6;
 case 6:
 //C
 this.state = 7;
- //BA.debugLineNum = 94;BA.debugLine="comando=palabras(i)";
+RDebugUtils.currentLine=1900558;
+ //BA.debugLineNum = 1900558;BA.debugLine="comando=palabras(i)";
 parent._comando = _palabras[_i];
  if (true) break;
 
@@ -685,9 +774,11 @@ case 7:
 //C
 this.state = 8;
 ;
- //BA.debugLineNum = 96;BA.debugLine="list1.Initialize2(habitaciones)";
+RDebugUtils.currentLine=1900560;
+ //BA.debugLineNum = 1900560;BA.debugLine="list1.Initialize2(habitaciones)";
 _list1.Initialize2(anywheresoftware.b4a.keywords.Common.ArrayToList(parent._habitaciones));
- //BA.debugLineNum = 97;BA.debugLine="If list1.IndexOf(palabras(i).ToLowerCase) <> -1";
+RDebugUtils.currentLine=1900561;
+ //BA.debugLineNum = 1900561;BA.debugLine="If list1.IndexOf(palabras(i).ToLowerCase) <> -1";
 if (true) break;
 
 case 8:
@@ -700,7 +791,8 @@ this.state = 10;
 case 10:
 //C
 this.state = 11;
- //BA.debugLineNum = 98;BA.debugLine="habitacion=palabras(i)";
+RDebugUtils.currentLine=1900562;
+ //BA.debugLineNum = 1900562;BA.debugLine="habitacion=palabras(i)";
 parent._habitacion = _palabras[_i];
  if (true) break;
 
@@ -708,9 +800,11 @@ case 11:
 //C
 this.state = 12;
 ;
- //BA.debugLineNum = 100;BA.debugLine="list1.Initialize2(perifericos)";
+RDebugUtils.currentLine=1900564;
+ //BA.debugLineNum = 1900564;BA.debugLine="list1.Initialize2(perifericos)";
 _list1.Initialize2(anywheresoftware.b4a.keywords.Common.ArrayToList(parent._perifericos));
- //BA.debugLineNum = 101;BA.debugLine="If list1.IndexOf(palabras(i).ToLowerCase) <> -1";
+RDebugUtils.currentLine=1900565;
+ //BA.debugLineNum = 1900565;BA.debugLine="If list1.IndexOf(palabras(i).ToLowerCase) <> -1";
 if (true) break;
 
 case 12:
@@ -723,7 +817,8 @@ this.state = 14;
 case 14:
 //C
 this.state = 15;
- //BA.debugLineNum = 102;BA.debugLine="periferico=palabras(i)";
+RDebugUtils.currentLine=1900566;
+ //BA.debugLineNum = 1900566;BA.debugLine="periferico=palabras(i)";
 parent._periferico = _palabras[_i];
  if (true) break;
 
@@ -738,9 +833,11 @@ case 16:
 //C
 this.state = 17;
 ;
- //BA.debugLineNum = 105;BA.debugLine="pregunta=\"¿\"";
+RDebugUtils.currentLine=1900569;
+ //BA.debugLineNum = 1900569;BA.debugLine="pregunta=\"¿\"";
 _pregunta = "¿";
- //BA.debugLineNum = 106;BA.debugLine="If comando=\"\" Then";
+RDebugUtils.currentLine=1900570;
+ //BA.debugLineNum = 1900570;BA.debugLine="If comando=\"\" Then";
 if (true) break;
 
 case 17:
@@ -753,11 +850,13 @@ this.state = 19;
 case 19:
 //C
 this.state = 20;
- //BA.debugLineNum = 107;BA.debugLine="pregunta=pregunta&\"que quiere hacer\"";
+RDebugUtils.currentLine=1900571;
+ //BA.debugLineNum = 1900571;BA.debugLine="pregunta=pregunta&\"que quiere hacer\"";
 _pregunta = _pregunta+"que quiere hacer";
  if (true) break;
 ;
- //BA.debugLineNum = 109;BA.debugLine="If habitacion=\"\" Then";
+RDebugUtils.currentLine=1900573;
+ //BA.debugLineNum = 1900573;BA.debugLine="If habitacion=\"\" Then";
 
 case 20:
 //if
@@ -769,11 +868,13 @@ this.state = 22;
 case 22:
 //C
 this.state = 23;
- //BA.debugLineNum = 110;BA.debugLine="pregunta=pregunta&\" en cual habitación\"";
+RDebugUtils.currentLine=1900574;
+ //BA.debugLineNum = 1900574;BA.debugLine="pregunta=pregunta&\" en cual habitación\"";
 _pregunta = _pregunta+" en cual habitación";
  if (true) break;
 ;
- //BA.debugLineNum = 112;BA.debugLine="If periferico=\"\" Then";
+RDebugUtils.currentLine=1900576;
+ //BA.debugLineNum = 1900576;BA.debugLine="If periferico=\"\" Then";
 
 case 23:
 //if
@@ -785,7 +886,8 @@ this.state = 25;
 case 25:
 //C
 this.state = 26;
- //BA.debugLineNum = 113;BA.debugLine="pregunta=pregunta&\" en cual periférico\"";
+RDebugUtils.currentLine=1900577;
+ //BA.debugLineNum = 1900577;BA.debugLine="pregunta=pregunta&\" en cual periférico\"";
 _pregunta = _pregunta+" en cual periférico";
  if (true) break;
 
@@ -793,11 +895,14 @@ case 26:
 //C
 this.state = 27;
 ;
- //BA.debugLineNum = 115;BA.debugLine="pregunta=pregunta&\"?\"";
+RDebugUtils.currentLine=1900579;
+ //BA.debugLineNum = 1900579;BA.debugLine="pregunta=pregunta&\"?\"";
 _pregunta = _pregunta+"?";
- //BA.debugLineNum = 116;BA.debugLine="Log(pregunta)";
-anywheresoftware.b4a.keywords.Common.LogImpl("3786468",_pregunta,0);
- //BA.debugLineNum = 117;BA.debugLine="If pregunta.Length>2 Then";
+RDebugUtils.currentLine=1900580;
+ //BA.debugLineNum = 1900580;BA.debugLine="Log(pregunta)";
+anywheresoftware.b4a.keywords.Common.LogImpl("51900580",_pregunta,0);
+RDebugUtils.currentLine=1900581;
+ //BA.debugLineNum = 1900581;BA.debugLine="If pregunta.Length>2 Then";
 if (true) break;
 
 case 27:
@@ -812,40 +917,52 @@ this.state = 31;
 case 29:
 //C
 this.state = 32;
- //BA.debugLineNum = 118;BA.debugLine="TTS1.Speak(pregunta, True)";
+RDebugUtils.currentLine=1900582;
+ //BA.debugLineNum = 1900582;BA.debugLine="TTS1.Speak(pregunta, True)";
 parent.mostCurrent._tts1.Speak(_pregunta,anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 119;BA.debugLine="Sleep(pregunta.Length*90)";
-anywheresoftware.b4a.keywords.Common.Sleep(mostCurrent.activityBA,this,(int) (_pregunta.length()*90));
+RDebugUtils.currentLine=1900583;
+ //BA.debugLineNum = 1900583;BA.debugLine="Sleep(pregunta.Length*90)";
+anywheresoftware.b4a.keywords.Common.Sleep(mostCurrent.activityBA,new anywheresoftware.b4a.shell.DebugResumableSub.DelegatableResumableSub(this, "main", "setrectextfield"),(int) (_pregunta.length()*90));
 this.state = 35;
 return;
 case 35:
 //C
 this.state = 32;
 ;
- //BA.debugLineNum = 120;BA.debugLine="pregunta=\"\"";
+RDebugUtils.currentLine=1900584;
+ //BA.debugLineNum = 1900584;BA.debugLine="pregunta=\"\"";
 _pregunta = "";
- //BA.debugLineNum = 121;BA.debugLine="voiceRec.listenSpeech";
-parent._voicerec._listenspeech /*String*/ ();
+RDebugUtils.currentLine=1900585;
+ //BA.debugLineNum = 1900585;BA.debugLine="voiceRec.listenSpeech";
+parent._voicerec._listenspeech /*String*/ (null);
  if (true) break;
 
 case 31:
 //C
 this.state = 32;
- //BA.debugLineNum = 123;BA.debugLine="Log(comando)";
-anywheresoftware.b4a.keywords.Common.LogImpl("3786475",parent._comando,0);
- //BA.debugLineNum = 124;BA.debugLine="Log(habitacion)";
-anywheresoftware.b4a.keywords.Common.LogImpl("3786476",parent._habitacion,0);
- //BA.debugLineNum = 125;BA.debugLine="Log(periferico)";
-anywheresoftware.b4a.keywords.Common.LogImpl("3786477",parent._periferico,0);
- //BA.debugLineNum = 126;BA.debugLine="udpCom.sendBroadcastUdp(comando.ToLowerCase&\"|\"&";
-parent._udpcom._sendbroadcastudp /*String*/ (parent._comando.toLowerCase()+"|"+parent._habitacion.toLowerCase()+"|"+parent._periferico.toLowerCase());
- //BA.debugLineNum = 127;BA.debugLine="TTS1.Speak(\"Comando Ejecutado: \"&comando.ToLower";
+RDebugUtils.currentLine=1900587;
+ //BA.debugLineNum = 1900587;BA.debugLine="Log(comando)";
+anywheresoftware.b4a.keywords.Common.LogImpl("51900587",parent._comando,0);
+RDebugUtils.currentLine=1900588;
+ //BA.debugLineNum = 1900588;BA.debugLine="Log(habitacion)";
+anywheresoftware.b4a.keywords.Common.LogImpl("51900588",parent._habitacion,0);
+RDebugUtils.currentLine=1900589;
+ //BA.debugLineNum = 1900589;BA.debugLine="Log(periferico)";
+anywheresoftware.b4a.keywords.Common.LogImpl("51900589",parent._periferico,0);
+RDebugUtils.currentLine=1900590;
+ //BA.debugLineNum = 1900590;BA.debugLine="udpCom.sendBroadcastUdp(comando.ToLowerCase&\"|\"&";
+parent._udpcom._sendbroadcastudp /*String*/ (null,parent._comando.toLowerCase()+"|"+parent._habitacion.toLowerCase()+"|"+parent._periferico.toLowerCase());
+RDebugUtils.currentLine=1900591;
+ //BA.debugLineNum = 1900591;BA.debugLine="TTS1.Speak(\"Comando Ejecutado: \"&comando.ToLower";
 parent.mostCurrent._tts1.Speak("Comando Ejecutado: "+parent._comando.toLowerCase()+" "+parent._periferico.toLowerCase()+" de "+parent._habitacion.toLowerCase(),anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 128;BA.debugLine="comando=\"\"";
+RDebugUtils.currentLine=1900592;
+ //BA.debugLineNum = 1900592;BA.debugLine="comando=\"\"";
 parent._comando = "";
- //BA.debugLineNum = 129;BA.debugLine="habitacion=\"\"";
+RDebugUtils.currentLine=1900593;
+ //BA.debugLineNum = 1900593;BA.debugLine="habitacion=\"\"";
 parent._habitacion = "";
- //BA.debugLineNum = 130;BA.debugLine="periferico=\"\"";
+RDebugUtils.currentLine=1900594;
+ //BA.debugLineNum = 1900594;BA.debugLine="periferico=\"\"";
 parent._periferico = "";
  if (true) break;
 
@@ -853,7 +970,8 @@ case 32:
 //C
 this.state = -1;
 ;
- //BA.debugLineNum = 132;BA.debugLine="End Sub";
+RDebugUtils.currentLine=1900596;
+ //BA.debugLineNum = 1900596;BA.debugLine="End Sub";
 if (true) break;
 
             }
