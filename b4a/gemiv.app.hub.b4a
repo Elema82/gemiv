@@ -101,6 +101,7 @@ End Sub
 
 Sub procesarMensaje
 	Wait For (voiceRec.RecognizeVoice) Complete (Result As String)
+	recText.Text = Result
 	Dim sTTS1 As JavaObject = TTS1
 	Dim palabras() As String
 	Dim pregunta As String
@@ -156,11 +157,6 @@ End Sub
 Sub listen_Click
 	voiceRec.listenSpeech
 	procesarMensaje
-End Sub
-
-Sub setRecTextField
-	Dim Result As List = voiceRec.getRecognizedText
-	recText.Text = Result.Get(0)
 End Sub
 
 Sub readUDPPacket

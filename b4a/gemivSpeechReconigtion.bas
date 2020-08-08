@@ -22,6 +22,15 @@ Public Sub Initialize(recLang As String, recPrompt As String)
 	VR.Prompt = recPrompt
 End Sub
 
+Public Sub RecognizeVoice As ResumableSub
+	VR.Listen
+	Wait For VR_Result (Success As Boolean, Texts As List)
+	If Success And Texts.Size > 0 Then
+		Return Texts.Get(0)
+	End If
+	Return ""
+End Sub
+
 Public Sub listenSpeech
 	VR.Listen
 End Sub
