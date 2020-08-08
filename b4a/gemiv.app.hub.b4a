@@ -10,16 +10,17 @@ Library3=network
 Library4=tts
 Library5=dbutils
 Library6=runtimepermissions
+Library7=javaobject
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.DarkTheme)~\n~'End of default text.~\n~
 Module1=GemivDBManager
 Module2=GemivGlobals
-Module3=GemivSpeechReconigtion
+Module3=gemivSpeechReconigtion
 Module4=GemivUdpComunication
 Module5=Starter
 NumberOfFiles=2
-NumberOfLibraries=6
+NumberOfLibraries=7
 NumberOfModules=5
-Version=9.801
+Version=10
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: Gemiv
@@ -38,7 +39,7 @@ Version=9.801
 Sub Process_Globals
 	'These global variables will be declared once when the application starts.
 	'These variables can be accessed from all modules.
-	Dim voiceRec 		As GemivSpeechReconigtion
+	Dim voiceRec 		As gemivSpeechReconigtion
 	Dim udpCom			As GemivUdpComunication
 	Dim dbManager		As GemivDBManager
 	Dim runtimeAdmin	As RuntimePermissions
@@ -98,24 +99,16 @@ Sub Activity_Pause (UserClosed As Boolean)
 
 End Sub
 
-
-Sub listen_Click
-	voiceRec.listenSpeech
-End Sub
-
-Sub setRecTextField
-	Dim Result As List = voiceRec.getRecognizedText
-	recText.Text = Result.Get(0)
-	Dim texto As String = Result.Get(0)
+Sub procesarMensaje
+	Wait For (voiceRec.RecognizeVoice) Complete (Result As String)
+	Dim sTTS1 As JavaObject = TTS1
 	Dim palabras() As String
 	Dim pregunta As String
-
-	palabras = Regex.Split(" ",texto)
+ 
+	palabras = Regex.Split(" ",Result)
 	For i=0 To palabras.Length-1
 		Dim list1 As List
 		list1.Initialize2(comandos)
-		Log(list1)
-		Log(palabras(i))
 		If list1.IndexOf(palabras(i).ToLowerCase) <> -1 Then
 			comando=palabras(i)
 		End If
@@ -127,24 +120,27 @@ Sub setRecTextField
 		If list1.IndexOf(palabras(i).ToLowerCase) <> -1  Then
 			periferico=palabras(i)
 		End If
-		Next
+	Next
 	pregunta="¿"
 	If comando="" Then
 		pregunta=pregunta&"que quiere hacer"
 	End If
 	If habitacion="" Then
-	pregunta=pregunta&" en cual habitación"
+		pregunta=pregunta&" en cual habitación"
 	End If
 	If periferico="" Then
-	pregunta=pregunta&" en cual periférico"
+		pregunta=pregunta&" en cual periférico"
 	End If
 	pregunta=pregunta&"?"
 	Log(pregunta)
-	If pregunta.Length>2 Then 
+	If pregunta.Length>2 Then
 		TTS1.Speak(pregunta, True)
-		Sleep(pregunta.Length*90)
+		Do While (sTTS1.RunMethod("isSpeaking", Null))
+			Sleep(10)
+		Loop
 		pregunta=""
 		voiceRec.listenSpeech
+		procesarMensaje
 	Else
 		Log(comando)
 		Log(habitacion)
@@ -154,7 +150,17 @@ Sub setRecTextField
 		comando=""
 		habitacion=""
 		periferico=""
-		End If
+	End If
+End Sub
+
+Sub listen_Click
+	voiceRec.listenSpeech
+	procesarMensaje
+End Sub
+
+Sub setRecTextField
+	Dim Result As List = voiceRec.getRecognizedText
+	recText.Text = Result.Get(0)
 End Sub
 
 Sub readUDPPacket
