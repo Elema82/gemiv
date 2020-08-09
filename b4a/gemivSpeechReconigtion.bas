@@ -23,7 +23,6 @@ Public Sub Initialize(recLang As String, recPrompt As String)
 End Sub
 
 Public Sub RecognizeVoice As ResumableSub
-	VR.Listen
 	Wait For VR_Result (Success As Boolean, Texts As List)
 	If Success And Texts.Size > 0 Then
 		Return Texts.Get(0)
@@ -54,17 +53,4 @@ End Sub
 
 Public Sub setRecPrompText(recPrompt As String)
 	recPromptText = recPromptText
-End Sub
-
-
-Public Sub VR_Result (Success As Boolean, Texts As List)
-	If Success Then
-		recognizedText = Texts
-		For i = 0 To Texts.Size -1
-			Log (Texts.Get(i))
-			Log (" i: "&i)
-		Next
-		recognizedText = Texts
-		CallSub(Main,"setRecTextField")
-	End If
 End Sub

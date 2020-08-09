@@ -14,13 +14,14 @@ Library7=javaobject
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.DarkTheme)~\n~'End of default text.~\n~
 Module1=GemivDBManager
 Module2=GemivGlobals
-Module3=gemivSpeechReconigtion
-Module4=GemivUdpComunication
-Module5=Starter
+Module3=GemivSpeechReconigtion
+Module4=GemivTTS
+Module5=GemivUdpComunication
+Module6=Starter
 NumberOfFiles=2
 NumberOfLibraries=7
-NumberOfModules=5
-Version=10
+NumberOfModules=6
+Version=9.801
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: Gemiv
@@ -39,22 +40,11 @@ Version=10
 Sub Process_Globals
 	'These global variables will be declared once when the application starts.
 	'These variables can be accessed from all modules.
-	Dim voiceRec 		As gemivSpeechReconigtion
+	Dim voiceRec 		As GemivSpeechReconigtion
 	Dim udpCom			As GemivUdpComunication
 	Dim dbManager		As GemivDBManager
 	Dim runtimeAdmin	As RuntimePermissions
-	Dim comandos()  	As String
-	Dim comando	 		As String
-	Dim habitaciones()  As String
-	Dim habitacion	 	As String
-	Dim perifericos()  	As String
-	Dim periferico	 	As String
-	comando				= ""
-	comandos 			= Array As String("prender","apagar")
-	habitacion			=""
-	habitaciones 		= Array As String("baño","dormitorio","cocina")
-	periferico			=""
-	perifericos 		= Array As String("luz","aire","ventilador")
+	Dim text2Speech		As GemivTTS
 End Sub
 
 Sub Globals
@@ -70,7 +60,6 @@ Sub Globals
 	Private off 		As Button
 	Private on 			As Button
 	Private ipSwitch 	As String
-	Dim TTS1 			As TTS
 	Private adddevice As Button
 	Private cleardevices As Button
 	Private nombreDispositivo As EditText
@@ -85,9 +74,8 @@ Sub Activity_Create(FirstTime As Boolean)
 		Wait For Activity_PermissionResult (Permission As String, Result As Boolean)
 		voiceRec.Initialize(Null,"Hable por favor")
 		udpCom.Initialize(8889,8888,8120)
-		TTS1.Initialize("TTS1")
+		text2Speech.Initialize
 		dbManager.Initialize("gemiv","gemivdb.db")
-		dbManager.logDefaultDirs
 	End If
 End Sub
 
@@ -102,40 +90,11 @@ End Sub
 Sub procesarMensaje
 	Wait For (voiceRec.RecognizeVoice) Complete (Result As String)
 	recText.Text = Result
-	Dim sTTS1 As JavaObject = TTS1
-	Dim palabras() As String
-	Dim pregunta As String
- 
-	palabras = Regex.Split(" ",Result)
-	For i=0 To palabras.Length-1
-		Dim list1 As List
-		list1.Initialize2(comandos)
-		If list1.IndexOf(palabras(i).ToLowerCase) <> -1 Then
-			comando=palabras(i)
-		End If
-		list1.Initialize2(habitaciones)
-		If list1.IndexOf(palabras(i).ToLowerCase) <> -1  Then
-			habitacion=palabras(i)
-		End If
-		list1.Initialize2(perifericos)
-		If list1.IndexOf(palabras(i).ToLowerCase) <> -1  Then
-			periferico=palabras(i)
-		End If
-	Next
-	pregunta="¿"
-	If comando="" Then
-		pregunta=pregunta&"que quiere hacer"
-	End If
-	If habitacion="" Then
-		pregunta=pregunta&" en cual habitación"
-	End If
-	If periferico="" Then
-		pregunta=pregunta&" en cual periférico"
-	End If
-	pregunta=pregunta&"?"
+	Dim sTTS1 As JavaObject = text2Speech.getTextToSpeech
+	Dim pregunta As String = GemivGlobals.getTextToSpeech(Result)
 	Log(pregunta)
-	If pregunta.Length>2 Then
-		TTS1.Speak(pregunta, True)
+	If Not(pregunta = "") Then
+		text2Speech.speak(pregunta,True)
 		Do While (sTTS1.RunMethod("isSpeaking", Null))
 			Sleep(10)
 		Loop
@@ -143,34 +102,20 @@ Sub procesarMensaje
 		voiceRec.listenSpeech
 		procesarMensaje
 	Else
-		Log(comando)
-		Log(habitacion)
-		Log(periferico)
-		udpCom.sendBroadcastUdp(comando.ToLowerCase&"|"&habitacion.ToLowerCase&"|"&periferico.ToLowerCase)
-		TTS1.Speak("Comando Ejecutado: "&comando.ToLowerCase&" "&periferico.ToLowerCase&" de "&habitacion.ToLowerCase, True)
-		comando=""
-		habitacion=""
-		periferico=""
+		Log(GemivGlobals.comando)
+		Log(GemivGlobals.habitacion)
+		Log(GemivGlobals.periferico)
+		udpCom.sendBroadcastUdp(GemivGlobals.comando.ToLowerCase&"|"&GemivGlobals.habitacion.ToLowerCase&"|"&GemivGlobals.periferico.ToLowerCase)
+		text2Speech.speak("Comando Ejecutado: "&GemivGlobals.comando.ToLowerCase&" "&GemivGlobals.periferico.ToLowerCase&" de "&GemivGlobals.habitacion.ToLowerCase, True)
+		GemivGlobals.comando=""
+		GemivGlobals.habitacion=""
+		GemivGlobals.periferico=""
 	End If
 End Sub
 
 Sub listen_Click
 	voiceRec.listenSpeech
 	procesarMensaje
-End Sub
-
-Sub readUDPPacket
-	Dim dg As String = udpCom.getMessageDatagram.data
-	ipSwitch         = udpCom.getMessageDatagram.ip
-	Dim dataArray() As String
-	dataArray = Regex.Split("\: ",dg)
-	If dataArray(0)="MAC" Then 
-		mac.Text	 = dataArray(1)
-	End If
-	If dataArray(0)="IP" Then
-		ip.Text		 = dataArray(1)
-	End If
-	
 End Sub
 
 
@@ -206,5 +151,21 @@ Sub cleardevices_Click
 		ToastMessageShow ("Dispositivo Borrado", True)
 	Else
 		ToastMessageShow ("Error", True)
+	End If
+End Sub
+
+Public Sub UDP_PacketArrived (dg As UDPPacket)
+	Dim dataString As String = BytesToString(dg.Data, dg.Offset, dg.Length, "UTF8")
+	Dim ipString   As String= dg.HostAddress
+	udpCom.setMessageDatagram(dataString,ipString)
+	Log("Data" & dataString)
+	ipSwitch         	   = ipString
+	Dim dataArray() As String
+	dataArray = Regex.Split("\: ",dataString)
+	If dataArray(0)="MAC" Then
+		mac.Text	 = dataArray(1)
+	End If
+	If dataArray(0)="IP" Then
+		ip.Text		 = dataArray(1)
 	End If
 End Sub

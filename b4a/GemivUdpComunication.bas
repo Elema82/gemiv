@@ -47,13 +47,6 @@ Public Sub sendDirectUdp(msg As String,remIp As String, remPort As Int)
 	socket.Send(packet)
 End Sub
 
-Public Sub UDP_PacketArrived (dg As UDPPacket)
-	messageDatagram.data = BytesToString(dg.Data, dg.Offset, dg.Length, "UTF8")
-	messageDatagram.ip	 = dg.HostAddress
-	Log("Data" & messageDatagram.data)
-	CallSub(Main,"readUDPPacket")
-End Sub
-
 Public Sub getMessageDatagram As ReceivedData
 	Return messageDatagram
 End Sub
@@ -65,4 +58,9 @@ Private Sub getBroadcastIp As String
 	devIpArray = Regex.Split("\.",devIp)
 	devIp = devIpArray(0) & "." & devIpArray(1) & "." & devIpArray(2) & ".255"
 	Return devIp
+End Sub
+
+Public Sub setMessageDatagram(data As String,ip As String)
+	messageDatagram.data = data
+	messageDatagram.ip	 = ip
 End Sub
