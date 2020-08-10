@@ -355,7 +355,7 @@ RemoteObject _response = RemoteObject.declareNull("anywheresoftware.b4a.sql.SQL.
 Debug.ShouldStop(64);
  BA.debugLineNum = 168;BA.debugLine="Dim selectDispositivo As String = \"select disposi";
 Debug.ShouldStop(128);
-_selectdispositivo = BA.ObjectToString("select dispositivo_id from gemiv_dispositivos order dispositivo_id desc limit 1");Debug.locals.put("selectDispositivo", _selectdispositivo);Debug.locals.put("selectDispositivo", _selectdispositivo);
+_selectdispositivo = BA.ObjectToString("select dispositivo_id from gemiv_dispositivos order by dispositivo_id desc limit 1");Debug.locals.put("selectDispositivo", _selectdispositivo);Debug.locals.put("selectDispositivo", _selectdispositivo);
  BA.debugLineNum = 169;BA.debugLine="Dim response As Cursor = dbManager.ExecQueryStatm";
 Debug.ShouldStop(256);
 _response = RemoteObject.createNew ("anywheresoftware.b4a.sql.SQL.CursorWrapper");
@@ -604,9 +604,9 @@ Debug.ShouldStop(262144);
 if (_existmac(_ba,_mac).<Boolean>get().booleanValue()) { 
  BA.debugLineNum = 180;BA.debugLine="Try";
 Debug.ShouldStop(524288);
-try { BA.debugLineNum = 181;BA.debugLine="qry = \"update gemiv_dispositivos set ip = \"&ip&";
+try { BA.debugLineNum = 181;BA.debugLine="qry = \"update gemiv_dispositivos set ip = '\"&ip";
 Debug.ShouldStop(1048576);
-_qry = RemoteObject.concat(RemoteObject.createImmutable("update gemiv_dispositivos set ip = "),_ip,RemoteObject.createImmutable(" where mac like '"),_mac,RemoteObject.createImmutable("'"));Debug.locals.put("qry", _qry);
+_qry = RemoteObject.concat(RemoteObject.createImmutable("update gemiv_dispositivos set ip = '"),_ip,RemoteObject.createImmutable("' where mac like '"),_mac,RemoteObject.createImmutable("'"));Debug.locals.put("qry", _qry);
  BA.debugLineNum = 182;BA.debugLine="dbManager.ExecNonQueryStatment(qry)";
 Debug.ShouldStop(2097152);
 gemivglobals._dbmanager.runClassMethod (b4a.gemiv.app.hub.gemivdbmanager.class, "_execnonquerystatment" /*RemoteObject*/ ,(Object)(_qry));

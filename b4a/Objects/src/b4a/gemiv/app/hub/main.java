@@ -497,23 +497,11 @@ public static String  _adddevice_click() throws Exception{
 RDebugUtils.currentModule="main";
 if (Debug.shouldDelegate(mostCurrent.activityBA, "adddevice_click", false))
 	 {return ((String) Debug.delegate(mostCurrent.activityBA, "adddevice_click", null));}
-String _qry = "";
 RDebugUtils.currentLine=1114112;
  //BA.debugLineNum = 1114112;BA.debugLine="Sub adddevice_Click";
-RDebugUtils.currentLine=1114113;
- //BA.debugLineNum = 1114113;BA.debugLine="Dim qry As String = GemivGlobals.qryInsertDevices";
-_qry = mostCurrent._gemivglobals._qryinsertdevices /*String*/ (mostCurrent.activityBA,mostCurrent._nombredispositivo.getText(),"192.168.0.67","00:00:00:00:00:00",(int) (1));
-RDebugUtils.currentLine=1114114;
- //BA.debugLineNum = 1114114;BA.debugLine="If GemivGlobals.dbManager.ExecNonQueryStatment(qr";
-if (mostCurrent._gemivglobals._dbmanager /*b4a.gemiv.app.hub.gemivdbmanager*/ ._execnonquerystatment /*boolean*/ (null,_qry)) { 
-RDebugUtils.currentLine=1114115;
- //BA.debugLineNum = 1114115;BA.debugLine="ToastMessageShow (\"Dispositivo Guardado\", True)";
-anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Dispositivo Guardado"),anywheresoftware.b4a.keywords.Common.True);
- }else {
-RDebugUtils.currentLine=1114117;
- //BA.debugLineNum = 1114117;BA.debugLine="ToastMessageShow (\"Error\", True)";
-anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Error"),anywheresoftware.b4a.keywords.Common.True);
- };
+RDebugUtils.currentLine=1114119;
+ //BA.debugLineNum = 1114119;BA.debugLine="GemivGlobals.processDispositivo(\"00:01:02:03:04:0";
+mostCurrent._gemivglobals._processdispositivo /*String*/ (mostCurrent.activityBA,"00:01:02:03:04:05","192.168.0.76");
 RDebugUtils.currentLine=1114120;
  //BA.debugLineNum = 1114120;BA.debugLine="End Sub";
 return "";
@@ -802,15 +790,15 @@ RDebugUtils.currentLine=1245193;
  //BA.debugLineNum = 1245193;BA.debugLine="mac.Text	 = dataArray(1)";
 mostCurrent._mac.setText(BA.ObjectToCharSequence(_dataarray[(int) (1)]));
  };
-RDebugUtils.currentLine=1245195;
- //BA.debugLineNum = 1245195;BA.debugLine="If dataArray(0)=\"IP\" Then";
-if ((_dataarray[(int) (0)]).equals("IP")) { 
 RDebugUtils.currentLine=1245196;
- //BA.debugLineNum = 1245196;BA.debugLine="ip.Text		 = dataArray(1)";
+ //BA.debugLineNum = 1245196;BA.debugLine="If dataArray(0)=\"IP\" Then";
+if ((_dataarray[(int) (0)]).equals("IP")) { 
+RDebugUtils.currentLine=1245197;
+ //BA.debugLineNum = 1245197;BA.debugLine="ip.Text		 = dataArray(1)";
 mostCurrent._ip.setText(BA.ObjectToCharSequence(_dataarray[(int) (1)]));
  };
-RDebugUtils.currentLine=1245198;
- //BA.debugLineNum = 1245198;BA.debugLine="End Sub";
+RDebugUtils.currentLine=1245199;
+ //BA.debugLineNum = 1245199;BA.debugLine="End Sub";
 return "";
 }
 }

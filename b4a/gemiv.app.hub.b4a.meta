@@ -19,6 +19,6 @@ ModuleClosedNodes3=
 ModuleClosedNodes4=
 ModuleClosedNodes5=
 ModuleClosedNodes6=
-NavigationStack=GemivGlobals,getLastDispositivoId,134,6,Main,adddevice_Click,108,0,GemivGlobals,existMac,167,6,GemivGlobals,existConfiguraciones,184,2,GemivGlobals,qryInsertDevices,26,0,GemivGlobals,processDispositivo,156,6,Main,Activity_Create,48,2,GemivGlobals,isDbConfigurada,201,6,GemivGlobals,createFirstTimeDBStructure,137,6,Main,Activity_Resume,52,0
+NavigationStack=Main,Activity_Create,48,2,GemivGlobals,isDbConfigurada,201,6,Main,Activity_Resume,52,0,GemivGlobals,createFirstTimeDBStructure,137,6,GemivGlobals,getLastDispositivoId,167,1,GemivGlobals,qryDeleteDevicesByName,32,0,Main,adddevice_Click,114,6,Main,cleardevices_Click,118,0,Main,UDP_PacketArrived,136,2,GemivGlobals,processDispositivo,178,6
 SelectedBuild=0
 VisibleModules=2

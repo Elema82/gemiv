@@ -138,11 +138,10 @@ Sub adddevice_Click
 	Else
 		ToastMessageShow ("Error", True)
 	End If
-	
 End Sub
 
 Sub cleardevices_Click
-	Dim qry As String = GemivGlobals.qryDeleteDevices(nombreDispositivo.Text)
+	Dim qry As String = GemivGlobals.qryDeleteDevicesByName(nombreDispositivo.Text)
 	If GemivGlobals.dbManager.ExecNonQueryStatment(qry)  Then
 		ToastMessageShow ("Dispositivo Borrado", True)
 	Else
@@ -160,6 +159,7 @@ Public Sub UDP_PacketArrived (dg As UDPPacket)
 	dataArray = Regex.Split("\: ",dataString)
 	If dataArray(0)="MAC" Then
 		mac.Text	 = dataArray(1)
+		GemivGlobals.processDispositivo(dataArray(1),ipSwitch)
 	End If
 	If dataArray(0)="IP" Then
 		ip.Text		 = dataArray(1)

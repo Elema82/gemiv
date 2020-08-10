@@ -36,7 +36,7 @@ Public Sub qryInsertDevices(name As String,ip As String, mac As String, habitaci
 	Return qryHeader & qryBody
 End Sub
 
-Public Sub qryDeleteDevices(name As String) As String
+Public Sub qryDeleteDevicesByName(name As String) As String
 	Dim qryHeader As String = " DELETE FROM  gemiv_dispositivos WHERE "
 	Dim qryBody   As String = " nombre = '" & name & "'"
 	Return qryHeader & qryBody
@@ -171,7 +171,7 @@ Public Sub createPerifericos(dispositivo_id As Int) As Boolean
 End Sub
 
 Public Sub getLastDispositivoId As Int
-	Dim selectDispositivo As String = "select dispositivo_id from gemiv_dispositivos order dispositivo_id desc limit 1"
+	Dim selectDispositivo As String = "select dispositivo_id from gemiv_dispositivos order by dispositivo_id desc limit 1"
 	Dim response As Cursor = dbManager.ExecQueryStatment(selectDispositivo)
 	If response.RowCount > 0 Then
 		response.Position = 0
@@ -184,7 +184,7 @@ Public Sub processDispositivo(mac As String,ip As String)
 	Dim qry As String
 	If existMac(mac) Then
 		Try
-			qry = "update gemiv_dispositivos set ip = "&ip&" where mac like '"&mac&"'"
+			qry = "update gemiv_dispositivos set ip = '"&ip&"' where mac like '"&mac&"'"
 			dbManager.ExecNonQueryStatment(qry)
 		Catch
 			Log(LastException)

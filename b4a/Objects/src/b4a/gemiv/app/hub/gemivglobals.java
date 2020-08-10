@@ -219,25 +219,62 @@ RDebugUtils.currentLine=1572935;
  //BA.debugLineNum = 1572935;BA.debugLine="End Sub";
 return "";
 }
-public static String  _qryinsertdevices(anywheresoftware.b4a.BA _ba,String _name,String _ip,String _mac,int _habitacion_id) throws Exception{
+public static String  _processdispositivo(anywheresoftware.b4a.BA _ba,String _mac,String _ip) throws Exception{
 RDebugUtils.currentModule="gemivglobals";
-if (Debug.shouldDelegate(null, "qryinsertdevices", false))
-	 {return ((String) Debug.delegate(null, "qryinsertdevices", new Object[] {_ba,_name,_ip,_mac,_habitacion_id}));}
-String _qryheader = "";
-String _qrybody = "";
-RDebugUtils.currentLine=1376256;
- //BA.debugLineNum = 1376256;BA.debugLine="Public Sub qryInsertDevices(name As String,ip As S";
-RDebugUtils.currentLine=1376257;
- //BA.debugLineNum = 1376257;BA.debugLine="Dim qryHeader As String = \" INSERT INTO gemiv_dis";
-_qryheader = " INSERT INTO gemiv_dispositivos (ip,mac,nombre,habitacion_id) ";
-RDebugUtils.currentLine=1376258;
- //BA.debugLineNum = 1376258;BA.debugLine="Dim qryBody   As String = \" VALUES ('\"&ip&\"', '\"&";
-_qrybody = " VALUES ('"+_ip+"', '"+_mac+"', '"+_name+"', "+BA.NumberToString(_habitacion_id)+")";
-RDebugUtils.currentLine=1376259;
- //BA.debugLineNum = 1376259;BA.debugLine="Return qryHeader & qryBody";
-if (true) return _qryheader+_qrybody;
-RDebugUtils.currentLine=1376260;
- //BA.debugLineNum = 1376260;BA.debugLine="End Sub";
+if (Debug.shouldDelegate(null, "processdispositivo", false))
+	 {return ((String) Debug.delegate(null, "processdispositivo", new Object[] {_ba,_mac,_ip}));}
+String _qry = "";
+int _dispositivo_id = 0;
+RDebugUtils.currentLine=12845056;
+ //BA.debugLineNum = 12845056;BA.debugLine="Public Sub processDispositivo(mac As String,ip As";
+RDebugUtils.currentLine=12845057;
+ //BA.debugLineNum = 12845057;BA.debugLine="Dim qry As String";
+_qry = "";
+RDebugUtils.currentLine=12845058;
+ //BA.debugLineNum = 12845058;BA.debugLine="If existMac(mac) Then";
+if (_existmac(_ba,_mac)) { 
+RDebugUtils.currentLine=12845059;
+ //BA.debugLineNum = 12845059;BA.debugLine="Try";
+try {RDebugUtils.currentLine=12845060;
+ //BA.debugLineNum = 12845060;BA.debugLine="qry = \"update gemiv_dispositivos set ip = '\"&ip";
+_qry = "update gemiv_dispositivos set ip = '"+_ip+"' where mac like '"+_mac+"'";
+RDebugUtils.currentLine=12845061;
+ //BA.debugLineNum = 12845061;BA.debugLine="dbManager.ExecNonQueryStatment(qry)";
+_dbmanager._execnonquerystatment /*boolean*/ (null,_qry);
+ } 
+       catch (Exception e7) {
+			(_ba.processBA == null ? _ba : _ba.processBA).setLastException(e7);RDebugUtils.currentLine=12845063;
+ //BA.debugLineNum = 12845063;BA.debugLine="Log(LastException)";
+anywheresoftware.b4a.keywords.Common.LogImpl("112845063",BA.ObjectToString(anywheresoftware.b4a.keywords.Common.LastException(_ba)),0);
+ };
+ }else {
+RDebugUtils.currentLine=12845066;
+ //BA.debugLineNum = 12845066;BA.debugLine="qry  = qryInsertDevices(\"\",ip,mac,0)";
+_qry = _qryinsertdevices(_ba,"",_ip,_mac,(int) (0));
+RDebugUtils.currentLine=12845067;
+ //BA.debugLineNum = 12845067;BA.debugLine="Try";
+try {RDebugUtils.currentLine=12845068;
+ //BA.debugLineNum = 12845068;BA.debugLine="dbManager.ExecNonQueryStatment(qry)";
+_dbmanager._execnonquerystatment /*boolean*/ (null,_qry);
+RDebugUtils.currentLine=12845069;
+ //BA.debugLineNum = 12845069;BA.debugLine="Dim dispositivo_id As Int = getLastDispositivoI";
+_dispositivo_id = _getlastdispositivoid(_ba);
+RDebugUtils.currentLine=12845070;
+ //BA.debugLineNum = 12845070;BA.debugLine="If dispositivo_id > 0 Then";
+if (_dispositivo_id>0) { 
+RDebugUtils.currentLine=12845071;
+ //BA.debugLineNum = 12845071;BA.debugLine="createPerifericos(dispositivo_id)";
+_createperifericos(_ba,_dispositivo_id);
+ };
+ } 
+       catch (Exception e18) {
+			(_ba.processBA == null ? _ba : _ba.processBA).setLastException(e18);RDebugUtils.currentLine=12845074;
+ //BA.debugLineNum = 12845074;BA.debugLine="Log(LastException)";
+anywheresoftware.b4a.keywords.Common.LogImpl("112845074",BA.ObjectToString(anywheresoftware.b4a.keywords.Common.LastException(_ba)),0);
+ };
+ };
+RDebugUtils.currentLine=12845077;
+ //BA.debugLineNum = 12845077;BA.debugLine="End Sub";
 return "";
 }
 public static String  _qrydeletedevices(anywheresoftware.b4a.BA _ba,String _name) throws Exception{
@@ -529,7 +566,7 @@ RDebugUtils.currentLine=11534336;
  //BA.debugLineNum = 11534336;BA.debugLine="Public Sub getLastDispositivoId As Int";
 RDebugUtils.currentLine=11534337;
  //BA.debugLineNum = 11534337;BA.debugLine="Dim selectDispositivo As String = \"select disposi";
-_selectdispositivo = "select dispositivo_id from gemiv_dispositivos order dispositivo_id desc limit 1";
+_selectdispositivo = "select dispositivo_id from gemiv_dispositivos order by dispositivo_id desc limit 1";
 RDebugUtils.currentLine=11534338;
  //BA.debugLineNum = 11534338;BA.debugLine="Dim response As Cursor = dbManager.ExecQueryStatm";
 _response = new anywheresoftware.b4a.sql.SQL.CursorWrapper();
@@ -551,62 +588,25 @@ RDebugUtils.currentLine=11534344;
  //BA.debugLineNum = 11534344;BA.debugLine="End Sub";
 return 0;
 }
-public static String  _processdispositivo(anywheresoftware.b4a.BA _ba,String _mac,String _ip) throws Exception{
+public static String  _qryinsertdevices(anywheresoftware.b4a.BA _ba,String _name,String _ip,String _mac,int _habitacion_id) throws Exception{
 RDebugUtils.currentModule="gemivglobals";
-if (Debug.shouldDelegate(null, "processdispositivo", false))
-	 {return ((String) Debug.delegate(null, "processdispositivo", new Object[] {_ba,_mac,_ip}));}
-String _qry = "";
-int _dispositivo_id = 0;
-RDebugUtils.currentLine=12845056;
- //BA.debugLineNum = 12845056;BA.debugLine="Public Sub processDispositivo(mac As String,ip As";
-RDebugUtils.currentLine=12845057;
- //BA.debugLineNum = 12845057;BA.debugLine="Dim qry As String";
-_qry = "";
-RDebugUtils.currentLine=12845058;
- //BA.debugLineNum = 12845058;BA.debugLine="If existMac(mac) Then";
-if (_existmac(_ba,_mac)) { 
-RDebugUtils.currentLine=12845059;
- //BA.debugLineNum = 12845059;BA.debugLine="Try";
-try {RDebugUtils.currentLine=12845060;
- //BA.debugLineNum = 12845060;BA.debugLine="qry = \"update gemiv_dispositivos set ip = \"&ip&";
-_qry = "update gemiv_dispositivos set ip = "+_ip+" where mac like '"+_mac+"'";
-RDebugUtils.currentLine=12845061;
- //BA.debugLineNum = 12845061;BA.debugLine="dbManager.ExecNonQueryStatment(qry)";
-_dbmanager._execnonquerystatment /*boolean*/ (null,_qry);
- } 
-       catch (Exception e7) {
-			(_ba.processBA == null ? _ba : _ba.processBA).setLastException(e7);RDebugUtils.currentLine=12845063;
- //BA.debugLineNum = 12845063;BA.debugLine="Log(LastException)";
-anywheresoftware.b4a.keywords.Common.LogImpl("112845063",BA.ObjectToString(anywheresoftware.b4a.keywords.Common.LastException(_ba)),0);
- };
- }else {
-RDebugUtils.currentLine=12845066;
- //BA.debugLineNum = 12845066;BA.debugLine="qry  = qryInsertDevices(\"\",ip,mac,0)";
-_qry = _qryinsertdevices(_ba,"",_ip,_mac,(int) (0));
-RDebugUtils.currentLine=12845067;
- //BA.debugLineNum = 12845067;BA.debugLine="Try";
-try {RDebugUtils.currentLine=12845068;
- //BA.debugLineNum = 12845068;BA.debugLine="dbManager.ExecNonQueryStatment(qry)";
-_dbmanager._execnonquerystatment /*boolean*/ (null,_qry);
-RDebugUtils.currentLine=12845069;
- //BA.debugLineNum = 12845069;BA.debugLine="Dim dispositivo_id As Int = getLastDispositivoI";
-_dispositivo_id = _getlastdispositivoid(_ba);
-RDebugUtils.currentLine=12845070;
- //BA.debugLineNum = 12845070;BA.debugLine="If dispositivo_id > 0 Then";
-if (_dispositivo_id>0) { 
-RDebugUtils.currentLine=12845071;
- //BA.debugLineNum = 12845071;BA.debugLine="createPerifericos(dispositivo_id)";
-_createperifericos(_ba,_dispositivo_id);
- };
- } 
-       catch (Exception e18) {
-			(_ba.processBA == null ? _ba : _ba.processBA).setLastException(e18);RDebugUtils.currentLine=12845074;
- //BA.debugLineNum = 12845074;BA.debugLine="Log(LastException)";
-anywheresoftware.b4a.keywords.Common.LogImpl("112845074",BA.ObjectToString(anywheresoftware.b4a.keywords.Common.LastException(_ba)),0);
- };
- };
-RDebugUtils.currentLine=12845077;
- //BA.debugLineNum = 12845077;BA.debugLine="End Sub";
+if (Debug.shouldDelegate(null, "qryinsertdevices", false))
+	 {return ((String) Debug.delegate(null, "qryinsertdevices", new Object[] {_ba,_name,_ip,_mac,_habitacion_id}));}
+String _qryheader = "";
+String _qrybody = "";
+RDebugUtils.currentLine=1376256;
+ //BA.debugLineNum = 1376256;BA.debugLine="Public Sub qryInsertDevices(name As String,ip As S";
+RDebugUtils.currentLine=1376257;
+ //BA.debugLineNum = 1376257;BA.debugLine="Dim qryHeader As String = \" INSERT INTO gemiv_dis";
+_qryheader = " INSERT INTO gemiv_dispositivos (ip,mac,nombre,habitacion_id) ";
+RDebugUtils.currentLine=1376258;
+ //BA.debugLineNum = 1376258;BA.debugLine="Dim qryBody   As String = \" VALUES ('\"&ip&\"', '\"&";
+_qrybody = " VALUES ('"+_ip+"', '"+_mac+"', '"+_name+"', "+BA.NumberToString(_habitacion_id)+")";
+RDebugUtils.currentLine=1376259;
+ //BA.debugLineNum = 1376259;BA.debugLine="Return qryHeader & qryBody";
+if (true) return _qryheader+_qrybody;
+RDebugUtils.currentLine=1376260;
+ //BA.debugLineNum = 1376260;BA.debugLine="End Sub";
 return "";
 }
 }

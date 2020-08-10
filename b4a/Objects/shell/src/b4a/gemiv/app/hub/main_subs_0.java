@@ -150,23 +150,11 @@ public static RemoteObject  _adddevice_click() throws Exception{
 try {
 		Debug.PushSubsStack("adddevice_Click (main) ","main",0,main.mostCurrent.activityBA,main.mostCurrent,109);
 if (RapidSub.canDelegate("adddevice_click")) { return b4a.gemiv.app.hub.main.remoteMe.runUserSub(false, "main","adddevice_click");}
-RemoteObject _qry = RemoteObject.createImmutable("");
  BA.debugLineNum = 109;BA.debugLine="Sub adddevice_Click";
 Debug.ShouldStop(4096);
- BA.debugLineNum = 110;BA.debugLine="Dim qry As String = GemivGlobals.qryInsertDevices";
-Debug.ShouldStop(8192);
-_qry = main.mostCurrent._gemivglobals.runMethod(true,"_qryinsertdevices" /*RemoteObject*/ ,main.mostCurrent.activityBA,(Object)(main.mostCurrent._nombredispositivo.runMethod(true,"getText")),(Object)(BA.ObjectToString("192.168.0.67")),(Object)(BA.ObjectToString("00:00:00:00:00:00")),(Object)(BA.numberCast(int.class, 1)));Debug.locals.put("qry", _qry);Debug.locals.put("qry", _qry);
- BA.debugLineNum = 111;BA.debugLine="If GemivGlobals.dbManager.ExecNonQueryStatment(qr";
-Debug.ShouldStop(16384);
-if (main.mostCurrent._gemivglobals._dbmanager /*RemoteObject*/ .runClassMethod (b4a.gemiv.app.hub.gemivdbmanager.class, "_execnonquerystatment" /*RemoteObject*/ ,(Object)(_qry)).<Boolean>get().booleanValue()) { 
- BA.debugLineNum = 112;BA.debugLine="ToastMessageShow (\"Dispositivo Guardado\", True)";
-Debug.ShouldStop(32768);
-main.mostCurrent.__c.runVoidMethod ("ToastMessageShow",(Object)(BA.ObjectToCharSequence("Dispositivo Guardado")),(Object)(main.mostCurrent.__c.getField(true,"True")));
- }else {
- BA.debugLineNum = 114;BA.debugLine="ToastMessageShow (\"Error\", True)";
-Debug.ShouldStop(131072);
-main.mostCurrent.__c.runVoidMethod ("ToastMessageShow",(Object)(BA.ObjectToCharSequence("Error")),(Object)(main.mostCurrent.__c.getField(true,"True")));
- };
+ BA.debugLineNum = 116;BA.debugLine="GemivGlobals.processDispositivo(\"00:01:02:03:04:0";
+Debug.ShouldStop(524288);
+main.mostCurrent._gemivglobals.runVoidMethod ("_processdispositivo" /*RemoteObject*/ ,main.mostCurrent.activityBA,(Object)(BA.ObjectToString("00:01:02:03:04:05")),(Object)(RemoteObject.createImmutable("192.168.0.76")));
  BA.debugLineNum = 117;BA.debugLine="End Sub";
 Debug.ShouldStop(1048576);
 return RemoteObject.createImmutable("");
@@ -573,15 +561,15 @@ if (RemoteObject.solveBoolean("=",_dataarray.getArrayElement(true,BA.numberCast(
 Debug.ShouldStop(256);
 main.mostCurrent._mac.runMethodAndSync(true,"setText",BA.ObjectToCharSequence(_dataarray.getArrayElement(true,BA.numberCast(int.class, 1))));
  };
- BA.debugLineNum = 139;BA.debugLine="If dataArray(0)=\"IP\" Then";
-Debug.ShouldStop(1024);
-if (RemoteObject.solveBoolean("=",_dataarray.getArrayElement(true,BA.numberCast(int.class, 0)),BA.ObjectToString("IP"))) { 
- BA.debugLineNum = 140;BA.debugLine="ip.Text		 = dataArray(1)";
+ BA.debugLineNum = 140;BA.debugLine="If dataArray(0)=\"IP\" Then";
 Debug.ShouldStop(2048);
+if (RemoteObject.solveBoolean("=",_dataarray.getArrayElement(true,BA.numberCast(int.class, 0)),BA.ObjectToString("IP"))) { 
+ BA.debugLineNum = 141;BA.debugLine="ip.Text		 = dataArray(1)";
+Debug.ShouldStop(4096);
 main.mostCurrent._ip.runMethodAndSync(true,"setText",BA.ObjectToCharSequence(_dataarray.getArrayElement(true,BA.numberCast(int.class, 1))));
  };
- BA.debugLineNum = 142;BA.debugLine="End Sub";
-Debug.ShouldStop(8192);
+ BA.debugLineNum = 143;BA.debugLine="End Sub";
+Debug.ShouldStop(16384);
 return RemoteObject.createImmutable("");
 }
 catch (Exception e) {
