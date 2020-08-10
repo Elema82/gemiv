@@ -40,11 +40,6 @@ Version=9.801
 Sub Process_Globals
 	'These global variables will be declared once when the application starts.
 	'These variables can be accessed from all modules.
-	Dim voiceRec 		As GemivSpeechReconigtion
-	Dim udpCom			As GemivUdpComunication
-	Dim dbManager		As GemivDBManager
-	Dim runtimeAdmin	As RuntimePermissions
-	Dim text2Speech		As GemivTTS
 End Sub
 
 Sub Globals
@@ -70,12 +65,13 @@ Sub Activity_Create(FirstTime As Boolean)
 	'Activity.LoadLayout("Layout1")
 	Activity.LoadLayout("gemivMain")
 	If FirstTime Then
-		runtimeAdmin.CheckAndRequest(runtimeAdmin.PERMISSION_WRITE_EXTERNAL_STORAGE)
+		GemivGlobals.runtimeAdmin.CheckAndRequest(GemivGlobals.runtimeAdmin.PERMISSION_WRITE_EXTERNAL_STORAGE)
 		Wait For Activity_PermissionResult (Permission As String, Result As Boolean)
-		voiceRec.Initialize(Null,"Hable por favor")
-		udpCom.Initialize(8889,8888,8120)
-		text2Speech.Initialize
-		dbManager.Initialize("gemiv","gemivdb.db")
+		GemivGlobals.voiceRec.Initialize(Null,"Hable por favor")
+		GemivGlobals.udpCom.Initialize(8889,8888,8120)
+		GemivGlobals.text2Speech.Initialize
+		GemivGlobals.dbManager.Initialize("gemiv","gemivdb.db")
+		GemivGlobals.createFirstTimeDBStructure
 	End If
 End Sub
 
@@ -88,25 +84,25 @@ Sub Activity_Pause (UserClosed As Boolean)
 End Sub
 
 Sub procesarMensaje
-	Wait For (voiceRec.RecognizeVoice) Complete (Result As String)
+	Wait For (GemivGlobals.voiceRec.RecognizeVoice) Complete (Result As String)
 	recText.Text = Result
-	Dim sTTS1 As JavaObject = text2Speech.getTextToSpeech
+	Dim sTTS1 As JavaObject = GemivGlobals.text2Speech.getTextToSpeech
 	Dim pregunta As String = GemivGlobals.getTextToSpeech(Result)
 	Log(pregunta)
 	If Not(pregunta = "") Then
-		text2Speech.speak(pregunta,True)
+		GemivGlobals.text2Speech.speak(pregunta,True)
 		Do While (sTTS1.RunMethod("isSpeaking", Null))
 			Sleep(10)
 		Loop
 		pregunta=""
-		voiceRec.listenSpeech
+		GemivGlobals.voiceRec.listenSpeech
 		procesarMensaje
 	Else
 		Log(GemivGlobals.comando)
 		Log(GemivGlobals.habitacion)
 		Log(GemivGlobals.periferico)
-		udpCom.sendBroadcastUdp(GemivGlobals.comando.ToLowerCase&"|"&GemivGlobals.habitacion.ToLowerCase&"|"&GemivGlobals.periferico.ToLowerCase)
-		text2Speech.speak("Comando Ejecutado: "&GemivGlobals.comando.ToLowerCase&" "&GemivGlobals.periferico.ToLowerCase&" de "&GemivGlobals.habitacion.ToLowerCase, True)
+		GemivGlobals.udpCom.sendBroadcastUdp(GemivGlobals.comando.ToLowerCase&"|"&GemivGlobals.habitacion.ToLowerCase&"|"&GemivGlobals.periferico.ToLowerCase)
+		GemivGlobals.text2Speech.speak("Comando Ejecutado: "&GemivGlobals.comando.ToLowerCase&" "&GemivGlobals.periferico.ToLowerCase&" de "&GemivGlobals.habitacion.ToLowerCase, True)
 		GemivGlobals.comando=""
 		GemivGlobals.habitacion=""
 		GemivGlobals.periferico=""
@@ -114,30 +110,30 @@ Sub procesarMensaje
 End Sub
 
 Sub listen_Click
-	voiceRec.listenSpeech
+	GemivGlobals.voiceRec.listenSpeech
 	procesarMensaje
 End Sub
 
 
 Sub getcommand_Click
-	udpCom.sendBroadcastUdp("GETCOMMAND")
+	GemivGlobals.udpCom.sendBroadcastUdp("GETCOMMAND")
 End Sub
 
 Sub beginlisten_Click
-	udpCom.sendDirectUdp("BEGINLISTEN",ipSwitch,0)
+	GemivGlobals.udpCom.sendDirectUdp("BEGINLISTEN",ipSwitch,0)
 End Sub
 
 Sub off_Click
-	udpCom.sendDirectUdp("apagar",ipSwitch,0)
+	GemivGlobals.udpCom.sendDirectUdp("apagar",ipSwitch,0)
 End Sub
 
 Sub on_Click
-	udpCom.sendDirectUdp("prender",ipSwitch,0)
+	GemivGlobals.udpCom.sendDirectUdp("prender",ipSwitch,0)
 End Sub
 
 Sub adddevice_Click
 	Dim qry As String = GemivGlobals.qryInsertDevices(nombreDispositivo.Text,"192.168.0.67","00:00:00:00:00:00",1)
-	If dbManager.ExecNonQueryStatment(qry) Then
+	If GemivGlobals.dbManager.ExecNonQueryStatment(qry) Then
 		ToastMessageShow ("Dispositivo Guardado", True)
 	Else
 		ToastMessageShow ("Error", True)
@@ -147,7 +143,7 @@ End Sub
 
 Sub cleardevices_Click
 	Dim qry As String = GemivGlobals.qryDeleteDevices(nombreDispositivo.Text)
-	If dbManager.ExecNonQueryStatment(qry)  Then
+	If GemivGlobals.dbManager.ExecNonQueryStatment(qry)  Then
 		ToastMessageShow ("Dispositivo Borrado", True)
 	Else
 		ToastMessageShow ("Error", True)
@@ -157,7 +153,7 @@ End Sub
 Public Sub UDP_PacketArrived (dg As UDPPacket)
 	Dim dataString As String = BytesToString(dg.Data, dg.Offset, dg.Length, "UTF8")
 	Dim ipString   As String= dg.HostAddress
-	udpCom.setMessageDatagram(dataString,ipString)
+	GemivGlobals.udpCom.setMessageDatagram(dataString,ipString)
 	Log("Data" & dataString)
 	ipSwitch         	   = ipString
 	Dim dataArray() As String

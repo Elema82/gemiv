@@ -33,7 +33,7 @@ public class main extends Activity implements B4AActivity{
 		super.onCreate(savedInstanceState);
         mostCurrent = this;
 		if (processBA == null) {
-			processBA = new BA(this.getApplicationContext(), null, null, "b4a.gemiv.app.hub", "b4a.gemiv.app.hub.main");
+			processBA = new anywheresoftware.b4a.ShellBA(this.getApplicationContext(), null, null, "b4a.gemiv.app.hub", "b4a.gemiv.app.hub.main");
 			processBA.loadHtSubs(this.getClass());
 	        float deviceScale = getApplicationContext().getResources().getDisplayMetrics().density;
 	        BALayout.setDeviceScale(deviceScale);
@@ -328,12 +328,48 @@ public class main extends Activity implements B4AActivity{
             
     }
 
+
+
+public static void initializeProcessGlobals() {
+    
+    if (main.processGlobalsRun == false) {
+	    main.processGlobalsRun = true;
+		try {
+		        		
+        } catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+    }
+}
+public static boolean isAnyActivityVisible() {
+    boolean vis = false;
+vis = vis | (main.mostCurrent != null);
+return vis;}
+
+private static BA killProgramHelper(BA ba) {
+    if (ba == null)
+        return null;
+    anywheresoftware.b4a.BA.SharedProcessBA sharedProcessBA = ba.sharedProcessBA;
+    if (sharedProcessBA == null || sharedProcessBA.activityBA == null)
+        return null;
+    return sharedProcessBA.activityBA.get();
+}
+public static void killProgram() {
+     {
+            Activity __a = null;
+            if (main.previousOne != null) {
+				__a = main.previousOne.get();
+			}
+            else {
+                BA ba = killProgramHelper(main.mostCurrent == null ? null : main.mostCurrent.processBA);
+                if (ba != null) __a = ba.activity;
+            }
+            if (__a != null)
+				__a.finish();}
+
+BA.applicationContext.stopService(new android.content.Intent(BA.applicationContext, starter.class));
+}
 public anywheresoftware.b4a.keywords.Common __c = null;
-public static b4a.gemiv.app.hub.gemivspeechreconigtion _voicerec = null;
-public static b4a.gemiv.app.hub.gemivudpcomunication _udpcom = null;
-public static b4a.gemiv.app.hub.gemivdbmanager _dbmanager = null;
-public static anywheresoftware.b4a.objects.RuntimePermissions _runtimeadmin = null;
-public static b4a.gemiv.app.hub.gemivtts _text2speech = null;
 public anywheresoftware.b4a.objects.EditTextWrapper _rectext = null;
 public anywheresoftware.b4a.objects.ButtonWrapper _listen = null;
 public anywheresoftware.b4a.objects.EditTextWrapper _ip = null;
@@ -350,12 +386,10 @@ public anywheresoftware.b4a.objects.EditTextWrapper _nombredispositivo = null;
 public b4a.gemiv.app.hub.gemivglobals _gemivglobals = null;
 public b4a.gemiv.app.hub.starter _starter = null;
 public b4a.gemiv.app.hub.dbutils _dbutils = null;
-
-public static boolean isAnyActivityVisible() {
-    boolean vis = false;
-vis = vis | (main.mostCurrent != null);
-return vis;}
 public static void  _activity_create(boolean _firsttime) throws Exception{
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "activity_create", false))
+	 {Debug.delegate(mostCurrent.activityBA, "activity_create", new Object[] {_firsttime}); return;}
 ResumableSub_Activity_Create rsub = new ResumableSub_Activity_Create(null,_firsttime);
 rsub.resume(processBA, null);
 }
@@ -371,6 +405,7 @@ boolean _result = false;
 
 @Override
 public void resume(BA ba, Object[] result) throws Exception{
+RDebugUtils.currentModule="main";
 
     while (true) {
         switch (state) {
@@ -380,9 +415,11 @@ return;
 case 0:
 //C
 this.state = 1;
- //BA.debugLineNum = 46;BA.debugLine="Activity.LoadLayout(\"gemivMain\")";
+RDebugUtils.currentLine=131075;
+ //BA.debugLineNum = 131075;BA.debugLine="Activity.LoadLayout(\"gemivMain\")";
 parent.mostCurrent._activity.LoadLayout("gemivMain",mostCurrent.activityBA);
- //BA.debugLineNum = 47;BA.debugLine="If FirstTime Then";
+RDebugUtils.currentLine=131076;
+ //BA.debugLineNum = 131076;BA.debugLine="If FirstTime Then";
 if (true) break;
 
 case 1:
@@ -395,10 +432,12 @@ this.state = 3;
 case 3:
 //C
 this.state = 4;
- //BA.debugLineNum = 48;BA.debugLine="runtimeAdmin.CheckAndRequest(runtimeAdmin.PERMIS";
-parent._runtimeadmin.CheckAndRequest(processBA,parent._runtimeadmin.PERMISSION_WRITE_EXTERNAL_STORAGE);
- //BA.debugLineNum = 49;BA.debugLine="Wait For Activity_PermissionResult (Permission A";
-anywheresoftware.b4a.keywords.Common.WaitFor("activity_permissionresult", processBA, this, null);
+RDebugUtils.currentLine=131077;
+ //BA.debugLineNum = 131077;BA.debugLine="GemivGlobals.runtimeAdmin.CheckAndRequest(GemivG";
+parent.mostCurrent._gemivglobals._runtimeadmin /*anywheresoftware.b4a.objects.RuntimePermissions*/ .CheckAndRequest(processBA,parent.mostCurrent._gemivglobals._runtimeadmin /*anywheresoftware.b4a.objects.RuntimePermissions*/ .PERMISSION_WRITE_EXTERNAL_STORAGE);
+RDebugUtils.currentLine=131078;
+ //BA.debugLineNum = 131078;BA.debugLine="Wait For Activity_PermissionResult (Permission A";
+anywheresoftware.b4a.keywords.Common.WaitFor("activity_permissionresult", processBA, new anywheresoftware.b4a.shell.DebugResumableSub.DelegatableResumableSub(this, "main", "activity_create"), null);
 this.state = 5;
 return;
 case 5:
@@ -407,140 +446,149 @@ this.state = 4;
 _permission = (String) result[0];
 _result = (Boolean) result[1];
 ;
- //BA.debugLineNum = 50;BA.debugLine="voiceRec.Initialize(Null,\"Hable por favor\")";
-parent._voicerec._initialize /*String*/ (processBA,BA.ObjectToString(anywheresoftware.b4a.keywords.Common.Null),"Hable por favor");
- //BA.debugLineNum = 51;BA.debugLine="udpCom.Initialize(8889,8888,8120)";
-parent._udpcom._initialize /*String*/ (processBA,(int) (8889),(int) (8888),(int) (8120));
- //BA.debugLineNum = 52;BA.debugLine="text2Speech.Initialize";
-parent._text2speech._initialize /*String*/ (processBA);
- //BA.debugLineNum = 53;BA.debugLine="dbManager.Initialize(\"gemiv\",\"gemivdb.db\")";
-parent._dbmanager._initialize /*String*/ (processBA,"gemiv","gemivdb.db");
+RDebugUtils.currentLine=131079;
+ //BA.debugLineNum = 131079;BA.debugLine="GemivGlobals.voiceRec.Initialize(Null,\"Hable por";
+parent.mostCurrent._gemivglobals._voicerec /*b4a.gemiv.app.hub.gemivspeechreconigtion*/ ._initialize /*String*/ (null,processBA,BA.ObjectToString(anywheresoftware.b4a.keywords.Common.Null),"Hable por favor");
+RDebugUtils.currentLine=131080;
+ //BA.debugLineNum = 131080;BA.debugLine="GemivGlobals.udpCom.Initialize(8889,8888,8120)";
+parent.mostCurrent._gemivglobals._udpcom /*b4a.gemiv.app.hub.gemivudpcomunication*/ ._initialize /*String*/ (null,processBA,(int) (8889),(int) (8888),(int) (8120));
+RDebugUtils.currentLine=131081;
+ //BA.debugLineNum = 131081;BA.debugLine="GemivGlobals.text2Speech.Initialize";
+parent.mostCurrent._gemivglobals._text2speech /*b4a.gemiv.app.hub.gemivtts*/ ._initialize /*String*/ (null,processBA);
+RDebugUtils.currentLine=131082;
+ //BA.debugLineNum = 131082;BA.debugLine="GemivGlobals.dbManager.Initialize(\"gemiv\",\"gemiv";
+parent.mostCurrent._gemivglobals._dbmanager /*b4a.gemiv.app.hub.gemivdbmanager*/ ._initialize /*String*/ (null,processBA,"gemiv","gemivdb.db");
+RDebugUtils.currentLine=131083;
+ //BA.debugLineNum = 131083;BA.debugLine="GemivGlobals.createFirstTimeDBStructure";
+parent.mostCurrent._gemivglobals._createfirsttimedbstructure /*String*/ (mostCurrent.activityBA);
  if (true) break;
 
 case 4:
 //C
 this.state = -1;
 ;
- //BA.debugLineNum = 55;BA.debugLine="End Sub";
+RDebugUtils.currentLine=131085;
+ //BA.debugLineNum = 131085;BA.debugLine="End Sub";
 if (true) break;
 
             }
         }
     }
 }
-public static void  _activity_permissionresult(String _permission,boolean _result) throws Exception{
-}
 public static String  _activity_pause(boolean _userclosed) throws Exception{
- //BA.debugLineNum = 61;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
- //BA.debugLineNum = 63;BA.debugLine="End Sub";
+RDebugUtils.currentModule="main";
+RDebugUtils.currentLine=262144;
+ //BA.debugLineNum = 262144;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
+RDebugUtils.currentLine=262146;
+ //BA.debugLineNum = 262146;BA.debugLine="End Sub";
 return "";
 }
 public static String  _activity_resume() throws Exception{
- //BA.debugLineNum = 57;BA.debugLine="Sub Activity_Resume";
- //BA.debugLineNum = 59;BA.debugLine="End Sub";
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "activity_resume", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "activity_resume", null));}
+RDebugUtils.currentLine=196608;
+ //BA.debugLineNum = 196608;BA.debugLine="Sub Activity_Resume";
+RDebugUtils.currentLine=196610;
+ //BA.debugLineNum = 196610;BA.debugLine="End Sub";
 return "";
 }
 public static String  _adddevice_click() throws Exception{
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "adddevice_click", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "adddevice_click", null));}
 String _qry = "";
- //BA.debugLineNum = 113;BA.debugLine="Sub adddevice_Click";
- //BA.debugLineNum = 114;BA.debugLine="Dim qry As String = GemivGlobals.qryInsertDevices";
+RDebugUtils.currentLine=1114112;
+ //BA.debugLineNum = 1114112;BA.debugLine="Sub adddevice_Click";
+RDebugUtils.currentLine=1114113;
+ //BA.debugLineNum = 1114113;BA.debugLine="Dim qry As String = GemivGlobals.qryInsertDevices";
 _qry = mostCurrent._gemivglobals._qryinsertdevices /*String*/ (mostCurrent.activityBA,mostCurrent._nombredispositivo.getText(),"192.168.0.67","00:00:00:00:00:00",(int) (1));
- //BA.debugLineNum = 115;BA.debugLine="If dbManager.ExecNonQueryStatment(qry) Then";
-if (_dbmanager._execnonquerystatment /*boolean*/ (_qry)) { 
- //BA.debugLineNum = 116;BA.debugLine="ToastMessageShow (\"Dispositivo Guardado\", True)";
+RDebugUtils.currentLine=1114114;
+ //BA.debugLineNum = 1114114;BA.debugLine="If GemivGlobals.dbManager.ExecNonQueryStatment(qr";
+if (mostCurrent._gemivglobals._dbmanager /*b4a.gemiv.app.hub.gemivdbmanager*/ ._execnonquerystatment /*boolean*/ (null,_qry)) { 
+RDebugUtils.currentLine=1114115;
+ //BA.debugLineNum = 1114115;BA.debugLine="ToastMessageShow (\"Dispositivo Guardado\", True)";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Dispositivo Guardado"),anywheresoftware.b4a.keywords.Common.True);
  }else {
- //BA.debugLineNum = 118;BA.debugLine="ToastMessageShow (\"Error\", True)";
+RDebugUtils.currentLine=1114117;
+ //BA.debugLineNum = 1114117;BA.debugLine="ToastMessageShow (\"Error\", True)";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Error"),anywheresoftware.b4a.keywords.Common.True);
  };
- //BA.debugLineNum = 121;BA.debugLine="End Sub";
+RDebugUtils.currentLine=1114120;
+ //BA.debugLineNum = 1114120;BA.debugLine="End Sub";
 return "";
 }
 public static String  _beginlisten_click() throws Exception{
- //BA.debugLineNum = 101;BA.debugLine="Sub beginlisten_Click";
- //BA.debugLineNum = 102;BA.debugLine="udpCom.sendDirectUdp(\"BEGINLISTEN\",ipSwitch,0)";
-_udpcom._senddirectudp /*String*/ ("BEGINLISTEN",mostCurrent._ipswitch,(int) (0));
- //BA.debugLineNum = 103;BA.debugLine="End Sub";
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "beginlisten_click", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "beginlisten_click", null));}
+RDebugUtils.currentLine=917504;
+ //BA.debugLineNum = 917504;BA.debugLine="Sub beginlisten_Click";
+RDebugUtils.currentLine=917505;
+ //BA.debugLineNum = 917505;BA.debugLine="GemivGlobals.udpCom.sendDirectUdp(\"BEGINLISTEN\",i";
+mostCurrent._gemivglobals._udpcom /*b4a.gemiv.app.hub.gemivudpcomunication*/ ._senddirectudp /*String*/ (null,"BEGINLISTEN",mostCurrent._ipswitch,(int) (0));
+RDebugUtils.currentLine=917506;
+ //BA.debugLineNum = 917506;BA.debugLine="End Sub";
 return "";
 }
 public static String  _cleardevices_click() throws Exception{
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "cleardevices_click", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "cleardevices_click", null));}
 String _qry = "";
- //BA.debugLineNum = 123;BA.debugLine="Sub cleardevices_Click";
- //BA.debugLineNum = 124;BA.debugLine="Dim qry As String = GemivGlobals.qryDeleteDevices";
+RDebugUtils.currentLine=1179648;
+ //BA.debugLineNum = 1179648;BA.debugLine="Sub cleardevices_Click";
+RDebugUtils.currentLine=1179649;
+ //BA.debugLineNum = 1179649;BA.debugLine="Dim qry As String = GemivGlobals.qryDeleteDevices";
 _qry = mostCurrent._gemivglobals._qrydeletedevices /*String*/ (mostCurrent.activityBA,mostCurrent._nombredispositivo.getText());
- //BA.debugLineNum = 125;BA.debugLine="If dbManager.ExecNonQueryStatment(qry)  Then";
-if (_dbmanager._execnonquerystatment /*boolean*/ (_qry)) { 
- //BA.debugLineNum = 126;BA.debugLine="ToastMessageShow (\"Dispositivo Borrado\", True)";
+RDebugUtils.currentLine=1179650;
+ //BA.debugLineNum = 1179650;BA.debugLine="If GemivGlobals.dbManager.ExecNonQueryStatment(qr";
+if (mostCurrent._gemivglobals._dbmanager /*b4a.gemiv.app.hub.gemivdbmanager*/ ._execnonquerystatment /*boolean*/ (null,_qry)) { 
+RDebugUtils.currentLine=1179651;
+ //BA.debugLineNum = 1179651;BA.debugLine="ToastMessageShow (\"Dispositivo Borrado\", True)";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Dispositivo Borrado"),anywheresoftware.b4a.keywords.Common.True);
  }else {
- //BA.debugLineNum = 128;BA.debugLine="ToastMessageShow (\"Error\", True)";
+RDebugUtils.currentLine=1179653;
+ //BA.debugLineNum = 1179653;BA.debugLine="ToastMessageShow (\"Error\", True)";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Error"),anywheresoftware.b4a.keywords.Common.True);
  };
- //BA.debugLineNum = 130;BA.debugLine="End Sub";
+RDebugUtils.currentLine=1179655;
+ //BA.debugLineNum = 1179655;BA.debugLine="End Sub";
 return "";
 }
 public static String  _getcommand_click() throws Exception{
- //BA.debugLineNum = 97;BA.debugLine="Sub getcommand_Click";
- //BA.debugLineNum = 98;BA.debugLine="udpCom.sendBroadcastUdp(\"GETCOMMAND\")";
-_udpcom._sendbroadcastudp /*String*/ ("GETCOMMAND");
- //BA.debugLineNum = 99;BA.debugLine="End Sub";
-return "";
-}
-public static String  _globals() throws Exception{
- //BA.debugLineNum = 25;BA.debugLine="Sub Globals";
- //BA.debugLineNum = 28;BA.debugLine="Private recText 	As EditText";
-mostCurrent._rectext = new anywheresoftware.b4a.objects.EditTextWrapper();
- //BA.debugLineNum = 29;BA.debugLine="Private listen 		As Button";
-mostCurrent._listen = new anywheresoftware.b4a.objects.ButtonWrapper();
- //BA.debugLineNum = 30;BA.debugLine="Private ip 			As EditText";
-mostCurrent._ip = new anywheresoftware.b4a.objects.EditTextWrapper();
- //BA.debugLineNum = 31;BA.debugLine="Private response 	As EditText";
-mostCurrent._response = new anywheresoftware.b4a.objects.EditTextWrapper();
- //BA.debugLineNum = 32;BA.debugLine="Private mac		 	As EditText";
-mostCurrent._mac = new anywheresoftware.b4a.objects.EditTextWrapper();
- //BA.debugLineNum = 33;BA.debugLine="Private getcommand 	As Button";
-mostCurrent._getcommand = new anywheresoftware.b4a.objects.ButtonWrapper();
- //BA.debugLineNum = 34;BA.debugLine="Private beginlisten As Button";
-mostCurrent._beginlisten = new anywheresoftware.b4a.objects.ButtonWrapper();
- //BA.debugLineNum = 35;BA.debugLine="Private off 		As Button";
-mostCurrent._off = new anywheresoftware.b4a.objects.ButtonWrapper();
- //BA.debugLineNum = 36;BA.debugLine="Private on 			As Button";
-mostCurrent._on = new anywheresoftware.b4a.objects.ButtonWrapper();
- //BA.debugLineNum = 37;BA.debugLine="Private ipSwitch 	As String";
-mostCurrent._ipswitch = "";
- //BA.debugLineNum = 38;BA.debugLine="Private adddevice As Button";
-mostCurrent._adddevice = new anywheresoftware.b4a.objects.ButtonWrapper();
- //BA.debugLineNum = 39;BA.debugLine="Private cleardevices As Button";
-mostCurrent._cleardevices = new anywheresoftware.b4a.objects.ButtonWrapper();
- //BA.debugLineNum = 40;BA.debugLine="Private nombreDispositivo As EditText";
-mostCurrent._nombredispositivo = new anywheresoftware.b4a.objects.EditTextWrapper();
- //BA.debugLineNum = 41;BA.debugLine="End Sub";
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "getcommand_click", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "getcommand_click", null));}
+RDebugUtils.currentLine=851968;
+ //BA.debugLineNum = 851968;BA.debugLine="Sub getcommand_Click";
+RDebugUtils.currentLine=851969;
+ //BA.debugLineNum = 851969;BA.debugLine="GemivGlobals.udpCom.sendBroadcastUdp(\"GETCOMMAND\"";
+mostCurrent._gemivglobals._udpcom /*b4a.gemiv.app.hub.gemivudpcomunication*/ ._sendbroadcastudp /*String*/ (null,"GETCOMMAND");
+RDebugUtils.currentLine=851970;
+ //BA.debugLineNum = 851970;BA.debugLine="End Sub";
 return "";
 }
 public static String  _listen_click() throws Exception{
- //BA.debugLineNum = 91;BA.debugLine="Sub listen_Click";
- //BA.debugLineNum = 92;BA.debugLine="voiceRec.listenSpeech";
-_voicerec._listenspeech /*String*/ ();
- //BA.debugLineNum = 93;BA.debugLine="procesarMensaje";
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "listen_click", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "listen_click", null));}
+RDebugUtils.currentLine=786432;
+ //BA.debugLineNum = 786432;BA.debugLine="Sub listen_Click";
+RDebugUtils.currentLine=786433;
+ //BA.debugLineNum = 786433;BA.debugLine="GemivGlobals.voiceRec.listenSpeech";
+mostCurrent._gemivglobals._voicerec /*b4a.gemiv.app.hub.gemivspeechreconigtion*/ ._listenspeech /*String*/ (null);
+RDebugUtils.currentLine=786434;
+ //BA.debugLineNum = 786434;BA.debugLine="procesarMensaje";
 _procesarmensaje();
- //BA.debugLineNum = 94;BA.debugLine="End Sub";
-return "";
-}
-public static String  _off_click() throws Exception{
- //BA.debugLineNum = 105;BA.debugLine="Sub off_Click";
- //BA.debugLineNum = 106;BA.debugLine="udpCom.sendDirectUdp(\"apagar\",ipSwitch,0)";
-_udpcom._senddirectudp /*String*/ ("apagar",mostCurrent._ipswitch,(int) (0));
- //BA.debugLineNum = 107;BA.debugLine="End Sub";
-return "";
-}
-public static String  _on_click() throws Exception{
- //BA.debugLineNum = 109;BA.debugLine="Sub on_Click";
- //BA.debugLineNum = 110;BA.debugLine="udpCom.sendDirectUdp(\"prender\",ipSwitch,0)";
-_udpcom._senddirectudp /*String*/ ("prender",mostCurrent._ipswitch,(int) (0));
- //BA.debugLineNum = 111;BA.debugLine="End Sub";
+RDebugUtils.currentLine=786435;
+ //BA.debugLineNum = 786435;BA.debugLine="End Sub";
 return "";
 }
 public static void  _procesarmensaje() throws Exception{
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "procesarmensaje", false))
+	 {Debug.delegate(mostCurrent.activityBA, "procesarmensaje", null); return;}
 ResumableSub_procesarMensaje rsub = new ResumableSub_procesarMensaje(null);
 rsub.resume(processBA, null);
 }
@@ -555,6 +603,7 @@ String _pregunta = "";
 
 @Override
 public void resume(BA ba, Object[] result) throws Exception{
+RDebugUtils.currentModule="main";
 
     while (true) {
         switch (state) {
@@ -564,8 +613,9 @@ return;
 case 0:
 //C
 this.state = 1;
- //BA.debugLineNum = 66;BA.debugLine="Wait For (voiceRec.RecognizeVoice) Complete (Resu";
-anywheresoftware.b4a.keywords.Common.WaitFor("complete", processBA, this, parent._voicerec._recognizevoice /*anywheresoftware.b4a.keywords.Common.ResumableSubWrapper*/ ());
+RDebugUtils.currentLine=720897;
+ //BA.debugLineNum = 720897;BA.debugLine="Wait For (GemivGlobals.voiceRec.RecognizeVoice) C";
+anywheresoftware.b4a.keywords.Common.WaitFor("complete", processBA, new anywheresoftware.b4a.shell.DebugResumableSub.DelegatableResumableSub(this, "main", "procesarmensaje"), parent.mostCurrent._gemivglobals._voicerec /*b4a.gemiv.app.hub.gemivspeechreconigtion*/ ._recognizevoice /*anywheresoftware.b4a.keywords.Common.ResumableSubWrapper*/ (null));
 this.state = 11;
 return;
 case 11:
@@ -573,16 +623,21 @@ case 11:
 this.state = 1;
 _result = (String) result[0];
 ;
- //BA.debugLineNum = 67;BA.debugLine="recText.Text = Result";
+RDebugUtils.currentLine=720898;
+ //BA.debugLineNum = 720898;BA.debugLine="recText.Text = Result";
 parent.mostCurrent._rectext.setText(BA.ObjectToCharSequence(_result));
- //BA.debugLineNum = 68;BA.debugLine="Dim sTTS1 As JavaObject = text2Speech.getTextToSp";
+RDebugUtils.currentLine=720899;
+ //BA.debugLineNum = 720899;BA.debugLine="Dim sTTS1 As JavaObject = GemivGlobals.text2Speec";
 _stts1 = new anywheresoftware.b4j.object.JavaObject();
-_stts1.setObject((java.lang.Object)(parent._text2speech._gettexttospeech /*anywheresoftware.b4a.obejcts.TTS*/ ().getObject()));
- //BA.debugLineNum = 69;BA.debugLine="Dim pregunta As String = GemivGlobals.getTextToSp";
+_stts1.setObject((java.lang.Object)(parent.mostCurrent._gemivglobals._text2speech /*b4a.gemiv.app.hub.gemivtts*/ ._gettexttospeech /*anywheresoftware.b4a.obejcts.TTS*/ (null).getObject()));
+RDebugUtils.currentLine=720900;
+ //BA.debugLineNum = 720900;BA.debugLine="Dim pregunta As String = GemivGlobals.getTextToSp";
 _pregunta = parent.mostCurrent._gemivglobals._gettexttospeech /*String*/ (mostCurrent.activityBA,_result);
- //BA.debugLineNum = 70;BA.debugLine="Log(pregunta)";
-anywheresoftware.b4a.keywords.Common.LogImpl("7720901",_pregunta,0);
- //BA.debugLineNum = 71;BA.debugLine="If Not(pregunta = \"\") Then";
+RDebugUtils.currentLine=720901;
+ //BA.debugLineNum = 720901;BA.debugLine="Log(pregunta)";
+anywheresoftware.b4a.keywords.Common.LogImpl("1720901",_pregunta,0);
+RDebugUtils.currentLine=720902;
+ //BA.debugLineNum = 720902;BA.debugLine="If Not(pregunta = \"\") Then";
 if (true) break;
 
 case 1:
@@ -597,9 +652,11 @@ this.state = 9;
 case 3:
 //C
 this.state = 4;
- //BA.debugLineNum = 72;BA.debugLine="text2Speech.speak(pregunta,True)";
-parent._text2speech._speak /*String*/ (_pregunta,anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 73;BA.debugLine="Do While (sTTS1.RunMethod(\"isSpeaking\", Null))";
+RDebugUtils.currentLine=720903;
+ //BA.debugLineNum = 720903;BA.debugLine="GemivGlobals.text2Speech.speak(pregunta,True)";
+parent.mostCurrent._gemivglobals._text2speech /*b4a.gemiv.app.hub.gemivtts*/ ._speak /*String*/ (null,_pregunta,anywheresoftware.b4a.keywords.Common.True);
+RDebugUtils.currentLine=720904;
+ //BA.debugLineNum = 720904;BA.debugLine="Do While (sTTS1.RunMethod(\"isSpeaking\", Null))";
 if (true) break;
 
 case 4:
@@ -614,8 +671,9 @@ if (true) break;
 case 6:
 //C
 this.state = 4;
- //BA.debugLineNum = 74;BA.debugLine="Sleep(10)";
-anywheresoftware.b4a.keywords.Common.Sleep(mostCurrent.activityBA,this,(int) (10));
+RDebugUtils.currentLine=720905;
+ //BA.debugLineNum = 720905;BA.debugLine="Sleep(10)";
+anywheresoftware.b4a.keywords.Common.Sleep(mostCurrent.activityBA,new anywheresoftware.b4a.shell.DebugResumableSub.DelegatableResumableSub(this, "main", "procesarmensaje"),(int) (10));
 this.state = 12;
 return;
 case 12:
@@ -628,32 +686,43 @@ case 7:
 //C
 this.state = 10;
 ;
- //BA.debugLineNum = 76;BA.debugLine="pregunta=\"\"";
+RDebugUtils.currentLine=720907;
+ //BA.debugLineNum = 720907;BA.debugLine="pregunta=\"\"";
 _pregunta = "";
- //BA.debugLineNum = 77;BA.debugLine="voiceRec.listenSpeech";
-parent._voicerec._listenspeech /*String*/ ();
- //BA.debugLineNum = 78;BA.debugLine="procesarMensaje";
+RDebugUtils.currentLine=720908;
+ //BA.debugLineNum = 720908;BA.debugLine="GemivGlobals.voiceRec.listenSpeech";
+parent.mostCurrent._gemivglobals._voicerec /*b4a.gemiv.app.hub.gemivspeechreconigtion*/ ._listenspeech /*String*/ (null);
+RDebugUtils.currentLine=720909;
+ //BA.debugLineNum = 720909;BA.debugLine="procesarMensaje";
 _procesarmensaje();
  if (true) break;
 
 case 9:
 //C
 this.state = 10;
- //BA.debugLineNum = 80;BA.debugLine="Log(GemivGlobals.comando)";
-anywheresoftware.b4a.keywords.Common.LogImpl("7720911",parent.mostCurrent._gemivglobals._comando /*String*/ ,0);
- //BA.debugLineNum = 81;BA.debugLine="Log(GemivGlobals.habitacion)";
-anywheresoftware.b4a.keywords.Common.LogImpl("7720912",parent.mostCurrent._gemivglobals._habitacion /*String*/ ,0);
- //BA.debugLineNum = 82;BA.debugLine="Log(GemivGlobals.periferico)";
-anywheresoftware.b4a.keywords.Common.LogImpl("7720913",parent.mostCurrent._gemivglobals._periferico /*String*/ ,0);
- //BA.debugLineNum = 83;BA.debugLine="udpCom.sendBroadcastUdp(GemivGlobals.comando.ToL";
-parent._udpcom._sendbroadcastudp /*String*/ (parent.mostCurrent._gemivglobals._comando /*String*/ .toLowerCase()+"|"+parent.mostCurrent._gemivglobals._habitacion /*String*/ .toLowerCase()+"|"+parent.mostCurrent._gemivglobals._periferico /*String*/ .toLowerCase());
- //BA.debugLineNum = 84;BA.debugLine="text2Speech.speak(\"Comando Ejecutado: \"&GemivGlo";
-parent._text2speech._speak /*String*/ ("Comando Ejecutado: "+parent.mostCurrent._gemivglobals._comando /*String*/ .toLowerCase()+" "+parent.mostCurrent._gemivglobals._periferico /*String*/ .toLowerCase()+" de "+parent.mostCurrent._gemivglobals._habitacion /*String*/ .toLowerCase(),anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 85;BA.debugLine="GemivGlobals.comando=\"\"";
+RDebugUtils.currentLine=720911;
+ //BA.debugLineNum = 720911;BA.debugLine="Log(GemivGlobals.comando)";
+anywheresoftware.b4a.keywords.Common.LogImpl("1720911",parent.mostCurrent._gemivglobals._comando /*String*/ ,0);
+RDebugUtils.currentLine=720912;
+ //BA.debugLineNum = 720912;BA.debugLine="Log(GemivGlobals.habitacion)";
+anywheresoftware.b4a.keywords.Common.LogImpl("1720912",parent.mostCurrent._gemivglobals._habitacion /*String*/ ,0);
+RDebugUtils.currentLine=720913;
+ //BA.debugLineNum = 720913;BA.debugLine="Log(GemivGlobals.periferico)";
+anywheresoftware.b4a.keywords.Common.LogImpl("1720913",parent.mostCurrent._gemivglobals._periferico /*String*/ ,0);
+RDebugUtils.currentLine=720914;
+ //BA.debugLineNum = 720914;BA.debugLine="GemivGlobals.udpCom.sendBroadcastUdp(GemivGlobal";
+parent.mostCurrent._gemivglobals._udpcom /*b4a.gemiv.app.hub.gemivudpcomunication*/ ._sendbroadcastudp /*String*/ (null,parent.mostCurrent._gemivglobals._comando /*String*/ .toLowerCase()+"|"+parent.mostCurrent._gemivglobals._habitacion /*String*/ .toLowerCase()+"|"+parent.mostCurrent._gemivglobals._periferico /*String*/ .toLowerCase());
+RDebugUtils.currentLine=720915;
+ //BA.debugLineNum = 720915;BA.debugLine="GemivGlobals.text2Speech.speak(\"Comando Ejecutad";
+parent.mostCurrent._gemivglobals._text2speech /*b4a.gemiv.app.hub.gemivtts*/ ._speak /*String*/ (null,"Comando Ejecutado: "+parent.mostCurrent._gemivglobals._comando /*String*/ .toLowerCase()+" "+parent.mostCurrent._gemivglobals._periferico /*String*/ .toLowerCase()+" de "+parent.mostCurrent._gemivglobals._habitacion /*String*/ .toLowerCase(),anywheresoftware.b4a.keywords.Common.True);
+RDebugUtils.currentLine=720916;
+ //BA.debugLineNum = 720916;BA.debugLine="GemivGlobals.comando=\"\"";
 parent.mostCurrent._gemivglobals._comando /*String*/  = "";
- //BA.debugLineNum = 86;BA.debugLine="GemivGlobals.habitacion=\"\"";
+RDebugUtils.currentLine=720917;
+ //BA.debugLineNum = 720917;BA.debugLine="GemivGlobals.habitacion=\"\"";
 parent.mostCurrent._gemivglobals._habitacion /*String*/  = "";
- //BA.debugLineNum = 87;BA.debugLine="GemivGlobals.periferico=\"\"";
+RDebugUtils.currentLine=720918;
+ //BA.debugLineNum = 720918;BA.debugLine="GemivGlobals.periferico=\"\"";
 parent.mostCurrent._gemivglobals._periferico /*String*/  = "";
  if (true) break;
 
@@ -661,76 +730,87 @@ case 10:
 //C
 this.state = -1;
 ;
- //BA.debugLineNum = 89;BA.debugLine="End Sub";
+RDebugUtils.currentLine=720920;
+ //BA.debugLineNum = 720920;BA.debugLine="End Sub";
 if (true) break;
 
             }
         }
     }
 }
-public static void  _complete(String _result) throws Exception{
+public static String  _off_click() throws Exception{
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "off_click", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "off_click", null));}
+RDebugUtils.currentLine=983040;
+ //BA.debugLineNum = 983040;BA.debugLine="Sub off_Click";
+RDebugUtils.currentLine=983041;
+ //BA.debugLineNum = 983041;BA.debugLine="GemivGlobals.udpCom.sendDirectUdp(\"apagar\",ipSwit";
+mostCurrent._gemivglobals._udpcom /*b4a.gemiv.app.hub.gemivudpcomunication*/ ._senddirectudp /*String*/ (null,"apagar",mostCurrent._ipswitch,(int) (0));
+RDebugUtils.currentLine=983042;
+ //BA.debugLineNum = 983042;BA.debugLine="End Sub";
+return "";
 }
-
-public static void initializeProcessGlobals() {
-    
-    if (main.processGlobalsRun == false) {
-	    main.processGlobalsRun = true;
-		try {
-		        main._process_globals();
-gemivglobals._process_globals();
-starter._process_globals();
-dbutils._process_globals();
-		
-        } catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-    }
-}public static String  _process_globals() throws Exception{
- //BA.debugLineNum = 15;BA.debugLine="Sub Process_Globals";
- //BA.debugLineNum = 18;BA.debugLine="Dim voiceRec 		As GemivSpeechReconigtion";
-_voicerec = new b4a.gemiv.app.hub.gemivspeechreconigtion();
- //BA.debugLineNum = 19;BA.debugLine="Dim udpCom			As GemivUdpComunication";
-_udpcom = new b4a.gemiv.app.hub.gemivudpcomunication();
- //BA.debugLineNum = 20;BA.debugLine="Dim dbManager		As GemivDBManager";
-_dbmanager = new b4a.gemiv.app.hub.gemivdbmanager();
- //BA.debugLineNum = 21;BA.debugLine="Dim runtimeAdmin	As RuntimePermissions";
-_runtimeadmin = new anywheresoftware.b4a.objects.RuntimePermissions();
- //BA.debugLineNum = 22;BA.debugLine="Dim text2Speech		As GemivTTS";
-_text2speech = new b4a.gemiv.app.hub.gemivtts();
- //BA.debugLineNum = 23;BA.debugLine="End Sub";
+public static String  _on_click() throws Exception{
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "on_click", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "on_click", null));}
+RDebugUtils.currentLine=1048576;
+ //BA.debugLineNum = 1048576;BA.debugLine="Sub on_Click";
+RDebugUtils.currentLine=1048577;
+ //BA.debugLineNum = 1048577;BA.debugLine="GemivGlobals.udpCom.sendDirectUdp(\"prender\",ipSwi";
+mostCurrent._gemivglobals._udpcom /*b4a.gemiv.app.hub.gemivudpcomunication*/ ._senddirectudp /*String*/ (null,"prender",mostCurrent._ipswitch,(int) (0));
+RDebugUtils.currentLine=1048578;
+ //BA.debugLineNum = 1048578;BA.debugLine="End Sub";
 return "";
 }
 public static String  _udp_packetarrived(anywheresoftware.b4a.objects.SocketWrapper.UDPSocket.UDPPacket _dg) throws Exception{
+RDebugUtils.currentModule="main";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "udp_packetarrived", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "udp_packetarrived", new Object[] {_dg}));}
 String _datastring = "";
 String _ipstring = "";
 String[] _dataarray = null;
- //BA.debugLineNum = 132;BA.debugLine="Public Sub UDP_PacketArrived (dg As UDPPacket)";
- //BA.debugLineNum = 133;BA.debugLine="Dim dataString As String = BytesToString(dg.Data,";
+RDebugUtils.currentLine=1245184;
+ //BA.debugLineNum = 1245184;BA.debugLine="Public Sub UDP_PacketArrived (dg As UDPPacket)";
+RDebugUtils.currentLine=1245185;
+ //BA.debugLineNum = 1245185;BA.debugLine="Dim dataString As String = BytesToString(dg.Data,";
 _datastring = anywheresoftware.b4a.keywords.Common.BytesToString(_dg.getData(),_dg.getOffset(),_dg.getLength(),"UTF8");
- //BA.debugLineNum = 134;BA.debugLine="Dim ipString   As String= dg.HostAddress";
+RDebugUtils.currentLine=1245186;
+ //BA.debugLineNum = 1245186;BA.debugLine="Dim ipString   As String= dg.HostAddress";
 _ipstring = _dg.getHostAddress();
- //BA.debugLineNum = 135;BA.debugLine="udpCom.setMessageDatagram(dataString,ipString)";
-_udpcom._setmessagedatagram /*String*/ (_datastring,_ipstring);
- //BA.debugLineNum = 136;BA.debugLine="Log(\"Data\" & dataString)";
-anywheresoftware.b4a.keywords.Common.LogImpl("71245188","Data"+_datastring,0);
- //BA.debugLineNum = 137;BA.debugLine="ipSwitch         	   = ipString";
+RDebugUtils.currentLine=1245187;
+ //BA.debugLineNum = 1245187;BA.debugLine="GemivGlobals.udpCom.setMessageDatagram(dataString";
+mostCurrent._gemivglobals._udpcom /*b4a.gemiv.app.hub.gemivudpcomunication*/ ._setmessagedatagram /*String*/ (null,_datastring,_ipstring);
+RDebugUtils.currentLine=1245188;
+ //BA.debugLineNum = 1245188;BA.debugLine="Log(\"Data\" & dataString)";
+anywheresoftware.b4a.keywords.Common.LogImpl("11245188","Data"+_datastring,0);
+RDebugUtils.currentLine=1245189;
+ //BA.debugLineNum = 1245189;BA.debugLine="ipSwitch         	   = ipString";
 mostCurrent._ipswitch = _ipstring;
- //BA.debugLineNum = 138;BA.debugLine="Dim dataArray() As String";
+RDebugUtils.currentLine=1245190;
+ //BA.debugLineNum = 1245190;BA.debugLine="Dim dataArray() As String";
 _dataarray = new String[(int) (0)];
 java.util.Arrays.fill(_dataarray,"");
- //BA.debugLineNum = 139;BA.debugLine="dataArray = Regex.Split(\"\\: \",dataString)";
+RDebugUtils.currentLine=1245191;
+ //BA.debugLineNum = 1245191;BA.debugLine="dataArray = Regex.Split(\"\\: \",dataString)";
 _dataarray = anywheresoftware.b4a.keywords.Common.Regex.Split("\\: ",_datastring);
- //BA.debugLineNum = 140;BA.debugLine="If dataArray(0)=\"MAC\" Then";
+RDebugUtils.currentLine=1245192;
+ //BA.debugLineNum = 1245192;BA.debugLine="If dataArray(0)=\"MAC\" Then";
 if ((_dataarray[(int) (0)]).equals("MAC")) { 
- //BA.debugLineNum = 141;BA.debugLine="mac.Text	 = dataArray(1)";
+RDebugUtils.currentLine=1245193;
+ //BA.debugLineNum = 1245193;BA.debugLine="mac.Text	 = dataArray(1)";
 mostCurrent._mac.setText(BA.ObjectToCharSequence(_dataarray[(int) (1)]));
  };
- //BA.debugLineNum = 143;BA.debugLine="If dataArray(0)=\"IP\" Then";
+RDebugUtils.currentLine=1245195;
+ //BA.debugLineNum = 1245195;BA.debugLine="If dataArray(0)=\"IP\" Then";
 if ((_dataarray[(int) (0)]).equals("IP")) { 
- //BA.debugLineNum = 144;BA.debugLine="ip.Text		 = dataArray(1)";
+RDebugUtils.currentLine=1245196;
+ //BA.debugLineNum = 1245196;BA.debugLine="ip.Text		 = dataArray(1)";
 mostCurrent._ip.setText(BA.ObjectToCharSequence(_dataarray[(int) (1)]));
  };
- //BA.debugLineNum = 146;BA.debugLine="End Sub";
+RDebugUtils.currentLine=1245198;
+ //BA.debugLineNum = 1245198;BA.debugLine="End Sub";
 return "";
 }
 }

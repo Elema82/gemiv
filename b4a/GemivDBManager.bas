@@ -29,6 +29,19 @@ Public Sub connectDataBase
 	dataBase.Initialize(dbDirectory,dbName,True)
 End Sub
 
+Public Sub beginTransaction
+	dataBase.BeginTransaction
+End Sub
+
+Public Sub sucessfulTransaction
+	dataBase.TransactionSuccessful
+End Sub
+
+Public Sub endTransaction
+	dataBase.EndTransaction
+End Sub
+  
+
 Public Sub ExecNonQueryStatment(query As String) As Boolean
 	If (query = Null Or query.Length <= 0) Then
 		Return False
